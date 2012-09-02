@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  playerOneWinner: MyString
+  playerTwoWinner: MyString
+  playerOneLoser: MyString
+  playerTwoLoser: MyString
+  cupsLeft: 
+
+two:
+  playerOneWinner: MyString
+  playerTwoWinner: MyString
+  playerOneLoser: MyString
+  playerTwoLoser: MyString
+  cupsLeft: 
