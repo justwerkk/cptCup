@@ -2,30 +2,30 @@
 
 <table>
   <tr>
-    <th>Winner one</th>
-    <th>Winner two</th>
-    <th>Loser one</th>
-    <th>Loser two</th>
-    <th>Cups left</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+    <th>Winner one
+    <th>Winner two
+    <th>Loser one
+    <th>Loser two
+    <th>Cups left
+    <th>Date</th>
+    <th>
+    <th>
+    <th>
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= game.winner_one.name %></td>
-    <td><%= game.winner_two.name %></td>
-    <td><%= game.loser_one.name %></td>
-    <td><%= game.loser_two.name %></td>
-    <td><%= game.cups_left %></td>
-    <td><%= link_to 'Show', game %></td>
-    <td><%= link_to 'Edit', edit_game_path(game) %></td>
-    <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
+    <td><%= game.winner_one.name %>
+    <td><%= game.winner_two.name %>
+    <td><%= game.loser_one.name %>
+    <td><%= game.loser_two.name %>
+    <td><%= game.cups_left %>
+    <td><%= game.created_at.strftime("%Y-%m-%d") %>
+    <td><%= link_to 'Show', game %>
+    <td><%= link_to 'Edit', edit_game_path(game) %>
+    <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 </table>
 
-<br />
+<br>
 
 <%= link_to 'New Game', new_game_path %>

@@ -2,13 +2,13 @@
 
 <%= render 'games/form' %>
 
-<h4>Players List</h4>
+<h4>Leaderboard</h4>
 <ul>
   <% @players_hash.sort_by {|k,v| v}.reverse.each do |k,v| %>
     <li><%= "#{k}: #{v}" %>
   <% end %>
 </ul>
-<p>Total Number of Games Played: <%= @num_games %></p>
+<p>Total Number of Games Recorded: <%= @num_games %></p>
 
 <a href="<%= games_path %>">List all games</a>
 
