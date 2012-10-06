@@ -11,4 +11,5 @@
 <p>Total Number of Games Played: <%= @num_games %></p>
 
 <a href="<%= games_path %>">List all games</a>
-<a href="<%= new_player_path %>">Add Player</a>
+
+<%= render 'players/form' %>
