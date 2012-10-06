@@ -1,1 +1,11 @@
-<h1>hello world</h1>
+<h1>Add game</h1>
+
+<%= render 'games/form' %>
+
+<h4>Players List</h4>
+<ul>
+  <% @players.each do |p| %>
+    <li><%= p.name %>
+  <% end %>
+</ul>
+<p>Total Number of Games Played: <%= @num_games %></p>

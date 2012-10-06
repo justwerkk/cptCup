@@ -25,13 +25,8 @@ class GamesController < ApplicationController
   # GET /games/new.json
   def new
     @game = Game.new
-
+    @game.build_default_assocations
     @players = Player.all
-
-    @game.build_winner_one unless @game.winner_one
-    @game.build_winner_two unless @game.winner_two
-    @game.build_loser_one unless @game.loser_one
-    @game.build_loser_two unless @game.loser_two
 
     respond_to do |format|
       format.html # new.html.erb

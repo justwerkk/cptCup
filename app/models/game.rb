@@ -9,4 +9,11 @@ class Game < ActiveRecord::Base
     :winner_one, :winner_two, :loser_one, :loser_two
 
   validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id, :cups_left
+
+  def build_default_assocations
+    self.build_winner_one unless self.winner_one
+    self.build_winner_two unless self.winner_two
+    self.build_loser_one unless self.loser_one
+    self.build_loser_two unless self.loser_two
+  end
 end
