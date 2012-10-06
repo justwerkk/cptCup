@@ -10,6 +10,27 @@ class Game < ActiveRecord::Base
 
   validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id
 
+  def self.calculate_rankings(games)
+    players_score = Player.all.inject({}) do |hash, p|
+      if hash[p.name].blank?
+        hash[p.name] = 1200
+      end
+      hash
+    end
+
+    games.each do |g|
+      winner_one_score = players_score[g.winner_one.name]
+      winner_two_score = players_score[g.winner_two.name]
+      loser_one_score = players_score[g.loser_one.name]
+      loser_two_score = players_score[g.loser_two.name]
+      players_score[g.winner_one.name] += 16*(1-1/(1.0+10**(((loser_one_score + loser_two_score)-(winner_one_score + winner_two_score))/400.0)))
+      players_score[g.winner_two.name] += 16*(1-1/(1.0+10**(((loser_one_score + loser_two_score)-(winner_one_score + winner_two_score))/400.0)))
+      players_score[g.loser_one.name] += 16*(0-1/(1.0+10**(((winner_one_score + winner_two_score)-(loser_one_score + loser_two_score))/400.0)))
+      players_score[g.loser_two.name] += 16*(0-1/(1.0+10**(((winner_one_score + winner_two_score)-(loser_one_score + loser_two_score))/400.0)))
+    end
+    players_score
+  end
+
   def build_default_assocations
     self.build_winner_one unless self.winner_one
     self.build_winner_two unless self.winner_two
