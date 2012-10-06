@@ -1,4 +1,5 @@
 CptCup::Application.routes.draw do
+  resources :players
   resources :games
 
   get "home/index"

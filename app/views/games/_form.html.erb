@@ -12,24 +12,24 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :playerOneWinner %><br />
-    <%= f.text_field :playerOneWinner %>
+    <%= f.label :winner_one %><br />
+    <%= f.select :winner_one_id, @players.collect {|p| [ p.name, p.id ]} %>
   </div>
   <div class="field">
-    <%= f.label :playerTwoWinner %><br />
-    <%= f.text_field :playerTwoWinner %>
+    <%= f.label :winner_two %><br />
+    <%= f.select :winner_two_id, @players.collect {|p| [ p.name, p.id ]} %>
   </div>
   <div class="field">
-    <%= f.label :playerOneLoser %><br />
-    <%= f.text_field :playerOneLoser %>
+    <%= f.label :loser_one %><br />
+    <%= f.select :loser_one_id, @players.collect {|p| [ p.name, p.id ]} %>
   </div>
   <div class="field">
-    <%= f.label :playerTwoLoser %><br />
-    <%= f.text_field :playerTwoLoser %>
+    <%= f.label :loser_two %><br />
+    <%= f.select :loser_two_id, @players.collect {|p| [ p.name, p.id ]} %>
   </div>
   <div class="field">
-    <%= f.label :cupsLeft %><br />
-    <%= f.text_field :cupsLeft %>
+    <%= f.label :cups_left %><br />
+    <%= f.number_field :cups_left %>
   </div>
   <div class="actions">
     <%= f.submit %>

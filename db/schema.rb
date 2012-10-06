@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,16 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120902054551) do
+ActiveRecord::Schema.define(:version => 20121005233655) do
 
   create_table "games", :force => true do |t|
-    t.string   "playerOneWinner"
-    t.string   "playerTwoWinner"
-    t.string   "playerOneLoser"
-    t.string   "playerTwoLoser"
-    t.integer  "cupsLeft"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.integer  "winner_one_id", :null => false
+    t.integer  "winner_two_id", :null => false
+    t.integer  "loser_one_id",  :null => false
+    t.integer  "loser_two_id",  :null => false
+    t.integer  "cups_left",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "players", :force => true do |t|
+    t.string   "name",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end

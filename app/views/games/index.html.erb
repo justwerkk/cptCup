@@ -2,11 +2,11 @@
 
 <table>
   <tr>
-    <th>Playeronewinner</th>
-    <th>Playertwowinner</th>
-    <th>Playeroneloser</th>
-    <th>Playertwoloser</th>
-    <th>Cupsleft</th>
+    <th>Winner one</th>
+    <th>Winner two</th>
+    <th>Loser one</th>
+    <th>Loser two</th>
+    <th>Cups left</th>
     <th></th>
     <th></th>
     <th></th>
@@ -14,14 +14,14 @@
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= game.playerOneWinner %></td>
-    <td><%= game.playerTwoWinner %></td>
-    <td><%= game.playerOneLoser %></td>
-    <td><%= game.playerTwoLoser %></td>
-    <td><%= game.cupsLeft %></td>
+    <td><%= game.winner_one.name %></td>
+    <td><%= game.winner_two.name %></td>
+    <td><%= game.loser_one.name %></td>
+    <td><%= game.loser_two.name %></td>
+    <td><%= game.cups_left %></td>
     <td><%= link_to 'Show', game %></td>
     <td><%= link_to 'Edit', edit_game_path(game) %></td>
-    <td><%= link_to 'Destroy', game, :method => :delete, :data => { :confirm => 'Are you sure?' } %></td>
+    <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>

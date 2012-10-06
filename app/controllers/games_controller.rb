@@ -6,7 +6,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @games }
+      format.json { render json: @games }
     end
   end
 
@@ -17,7 +17,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @game }
+      format.json { render json: @game }
     end
   end
 
@@ -26,9 +26,16 @@ class GamesController < ApplicationController
   def new
     @game = Game.new
 
+    @players = Player.all
+
+    @game.build_winner_one unless @game.winner_one
+    @game.build_winner_two unless @game.winner_two
+    @game.build_loser_one unless @game.loser_one
+    @game.build_loser_two unless @game.loser_two
+
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @game }
+      format.json { render json: @game }
     end
   end
 
@@ -44,11 +51,12 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.save
-        format.html { redirect_to @game, :notice => 'Game was successfully created.' }
-        format.json { render :json => @game, :status => :created, :location => @game }
+        format.html { redirect_to @game, notice: 'Game was successfully created.' }
+        format.json { render json: @game, status: :created, location: @game }
       else
-        format.html { render :action => "new" }
-        format.json { render :json => @game.errors, :status => :unprocessable_entity }
+        @players = Player.all
+        format.html { render action: "new" }
+        format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -60,11 +68,11 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.update_attributes(params[:game])
-        format.html { redirect_to @game, :notice => 'Game was successfully updated.' }
+        format.html { redirect_to @game, notice: 'Game was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render :action => "edit" }
-        format.json { render :json => @game.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
   end
