@@ -2,12 +2,13 @@
 <html>
 <head>
   <title>Canute Tacderan Cup</title>
-  <%= stylesheet_link_tag "scaffold" %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
   <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
 <body>
   <%= yield %>
+  <%= javascript_include_tag "application" %>
   <%= yield :script %>
 </body>
 </html>
