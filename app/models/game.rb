@@ -9,6 +9,7 @@ class Game < ActiveRecord::Base
     :winner_one, :winner_two, :loser_one, :loser_two
 
   validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id
+  validate :not_same_player
 
   def self.calculate_rankings(games)
     players_score = Player.all.inject({}) do |hash, p|
@@ -36,5 +37,13 @@ class Game < ActiveRecord::Base
     self.build_winner_two unless self.winner_two
     self.build_loser_one unless self.loser_one
     self.build_loser_two unless self.loser_two
+  end
+
+  private
+
+  def not_same_player
+    if [self.winner_one_id, self.winner_two.id, self.loser_one_id, self.loser_two_id].uniq.size != 4
+      self.errors.add(:base, "Can't add the same player fool!")
+    end
   end
 end
