@@ -1,6 +1,9 @@
 CptCup::Application.routes.draw do
   resources :players
-  resources :games
+  resources :games do
+    get :odds, :on => :collection
+    get :show_odds, :on => :collection
+  end
 
   get "home/index"
 

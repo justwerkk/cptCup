@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(:version => 20121005233655) do
     t.integer  "winner_two_id", :null => false
     t.integer  "loser_one_id",  :null => false
     t.integer  "loser_two_id",  :null => false
-    t.integer  "cups_left",     :null => false
+    t.integer  "cups_left"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

@@ -84,4 +84,14 @@ class GamesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def odds
+    @game = Game.new(params[:game])
+    @players = Player.all
+
+    respond_to do |format|
+      @game.build_default_assocations unless @expected_outcome = @game.expected_outcome
+      format.html {  }
+    end
+  end
 end

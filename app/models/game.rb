@@ -8,8 +8,44 @@ class Game < ActiveRecord::Base
     :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id,
     :winner_one, :winner_two, :loser_one, :loser_two
 
+  attr_reader :team_1_score, :team_2_score
+
   validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id
   validate :not_same_player
+
+  def expected_outcome
+    return false unless winner_one && winner_two && loser_one && loser_two
+
+    players_score = Game.calculate_rankings(Game.all)
+
+    @team_1_score = players_score[winner_one.name] + players_score[winner_two.name]
+    @team_2_score = players_score[loser_one.name] + players_score[loser_two.name]
+
+    team_1_expected = 1 / ( 1 + 10 ** ((team_2_score - team_1_score)/400))
+    team_2_expected = 1 / ( 1 + 10 ** ((team_1_score - team_2_score)/400))
+
+    return team_1_expected, team_2_expected
+  end
+
+  def total_winner_score
+    unless @team_1_score
+      players_score = Game.calculate_rankings(Game.all)
+
+      @team_1_score = players_score[winner_one.name] + players_score[winner_two.name]
+    end
+
+    @team_1_score
+  end
+
+  def total_loser_score
+    unless@team_2_score
+      players_score = Game.calculate_rankings(Game.all)
+
+      @team_2_score = players_score[loser_one.name] + players_score[loser_two.name]
+    end
+
+    @team_2_score
+  end
 
   def self.calculate_rankings(games)
     players_score = Player.all.inject({}) do |hash, p|
@@ -42,7 +78,7 @@ class Game < ActiveRecord::Base
   private
 
   def not_same_player
-    if [self.winner_one_id, self.winner_two.id, self.loser_one_id, self.loser_two_id].uniq.size != 4
+    if [self.winner_one_id, self.winner_two_id, self.loser_one_id, self.loser_two_id].uniq.size != 4
       self.errors.add(:base, "Can't add the same player fool!")
     end
   end
