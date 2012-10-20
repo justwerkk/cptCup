@@ -19,6 +19,5 @@ end
 gem 'jquery-rails'
 
 group :development do
-  gem 'sqlite3'
   gem 'heroku'
 end
