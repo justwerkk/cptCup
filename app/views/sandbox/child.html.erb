@@ -2,7 +2,9 @@
 <script>
   $(function() {
     var iframe = window && window.opener && window.opener.frames["22752df0-e34c-11e1-9b23-0800200c9a66"];
-    console.log(window.opener, window.opener.frames["22752df0-e34c-11e1-9b23-0800200c9a66"], iframe.testFunction);
+    alert('window opener ' + window.opener == null);
+    alert('frame ' + window.opener.frames["22752df0-e34c-11e1-9b23-0800200c9a66"]);
+    alert('java script test function ' + iframe.testFunction);
     if (iframe && typeof(iframe.testFunction) != 'undefined') {
       alert('exists');
     } else {
