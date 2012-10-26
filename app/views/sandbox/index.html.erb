@@ -1,3 +1,4 @@
+<div id="myDiv">FlackAttack Test</div>
 <input id="popup-button" type="button">Button</input>
 <iframe id="22752df0-e34c-11e1-9b23-0800200c9a66" name="22752df0-e34c-11e1-9b23-0800200c9a66" src="<%= other_page_path %>"></iframe>
 
@@ -6,5 +7,9 @@
   $("#popup-button").click(function() {
     window.open('<%= child_popup_path %>');
   })
+</script>
+<script>
+document.body.addEventListener("click", function(){alert("ios6 sucks")}, false);
+document.getElementById('myDiv').addEventListener('click', function(){alert("ios6 sucks twice")},      false);
 </script>
 <% end %>
