@@ -10,6 +10,8 @@
 </script>
 <script>
 document.body.addEventListener("click", function(){alert("ios6 sucks")}, false);
-document.getElementById('myDiv').addEventListener('click', function(){alert("ios6 sucks twice")},      false);
+document.body.addEventListener("ontouchend", function(){alert("ios6 on touch end body")}, false);
+document.getElementById('myDiv').addEventListener('click', function(){alert("ios6 sucks twice")}, false);
+document.getElementById('myDiv').addEventListener('ontouchend', function(){alert("ios6 on touch end")}, false);
 </script>
 <% end %>
