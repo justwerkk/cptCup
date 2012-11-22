@@ -42,6 +42,9 @@
   drawComparisons(data['bert']);
 
   function drawComparisons(dataPoints) {
+    dataPoints = dataPoints.sort(function(a, b) {
+      return d3.descending(a[1], b[1]);
+    });
     var bars = chart.selectAll('rect')
       .data(dataPoints);
     bars.enter().append('rect');
@@ -67,7 +70,8 @@
 
     var text = chart.selectAll('text')
       .data(dataPoints)
-    text.enter().append("text")
+    text.enter().append("text");
+    text.transition().duration(1000)
       .attr('x', function(d) { return w/2; })
       .attr('y', function(d, i) { return (i * 20) + 13; })
       .attr("text-anchor", "middle")
@@ -75,7 +79,7 @@
       .text(function(d) {
         return namesHash[d[0]];
       });
-
+    text.exit().remove();
   }
 </script>
 <% end %>
