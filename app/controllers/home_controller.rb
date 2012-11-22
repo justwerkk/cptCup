@@ -8,4 +8,7 @@ class HomeController < ApplicationController
 
     @players_hash = Game.calculate_rankings(Game.all)
   end
+
+  def comparisons
+  end
 end
