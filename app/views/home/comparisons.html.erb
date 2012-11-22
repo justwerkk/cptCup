@@ -80,6 +80,23 @@
         return namesHash[d[0]];
       });
     text.exit().remove();
+
+    var winLoss = chart.selectAll('winLossText')
+      .data(dataPoints)
+    winLoss.enter().append("text");
+    winLoss.transition().duration(1000)
+      .attr('x', function(d) {
+        if (d[1] > 0) {
+          return w/2 + nameGap/2 - 10;
+        } else {
+          return w/2 - nameGap/2 + 10;
+        }
+      })
+      .attr('y', function(d, i) { return (i * 20) + 13; })
+      .attr("text-anchor", "middle")
+      .attr('width', nameGap)
+      .text(function(d) { return (d[1] > 0 ? "+" : "") + d[1]; });
+    winLoss.exit().remove();
   }
 </script>
 <% end %>
