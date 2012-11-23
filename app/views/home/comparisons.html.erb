@@ -3,13 +3,14 @@
   body {
     font-family: Baskerville, "Times New Roman", serif;
   }
-  .svg-container {
+  #player-selector {
+    position: fixed;
   }
 </style>
 <% end %>
 
 <select id="player-selector">
-  <% @players_hash.each do |k,v| %>
+  <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
   <option data-id="<%= k %>"><%= v %></option>
   <% end %>
 </select>
@@ -62,9 +63,9 @@
       })
       .attr('fill', function(d) {
         if (d[1] > 0) {
-          return "rgb(0, " + (Math.abs(d[1]) * 100) + ", 0)";
+          return "rgb(0, " + (Math.abs(d[1]) * 50) + ", 0)";
         } else {
-          return "rgb(" + (Math.abs(d[1]) * 100) + ", 0, 0)";
+          return "rgb(" + (Math.abs(d[1]) * 50) + ", 0, 0)";
         }
       })
       .attr('y', function(d, i) { return i * 20; })
