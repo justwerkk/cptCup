@@ -1,4 +1,28 @@
-<a style="float:right; padding-right: 10px;" href="<%= comparisons_path %>">Experimental</a>
+<% content_for :head do %>
+<style>
+  .experimental {
+    position: relative;
+    float:right;
+    padding-right: 1em;
+  }
+  .experimental sup {
+    color: red;
+    font-weight: bold;
+    -moz-transform: rotate(-27deg);
+    -webkit-transform: rotate(-27deg);
+    display: block;
+    left: -2em;
+    position: relative;
+    top: -1em;
+    font-size: 0.538em;
+  }
+</style>
+<% end %>
+
+<div class="experimental">
+  <sup>New</sup>
+  <a href="<%= comparisons_path %>">W-L Records</a>
+</div>
 
 <h1>Canuto Tacderan Cup</h1>
 
