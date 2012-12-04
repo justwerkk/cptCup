@@ -107,14 +107,13 @@
       .data(dataPoints)
     record.enter().append("text");
     record.transition().duration(1000)
+      .attr('class', 'win-loss')
       .attr('x', function(d) {
-        var xPos;
+        var xOffset = 0;
         if (d[1][0]-d[1][1] > 0) {
-          xPos = chart.nameLeftPos();
-        } else {
-          xPos = chart.nameRightPos() + (d[1][0]-d[1][1]) * 20;
+          xOffset = Math.abs(d[1][0]-d[1][1])*20;
         }
-        return xPos + Math.abs(d[1][0]-d[1][1])*20;
+        return chart.nameLeftPos() + xOffset;
       })
       .attr('y', function(d, i) { return (i * 20) + 13; })
       .text(function(d) {
