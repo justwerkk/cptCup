@@ -1,5 +1,13 @@
 <% content_for :head do %>
 <style>
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  ul li {
+    position: relative;
+  }
   .experimental {
     position: relative;
     float:right;
@@ -11,17 +19,23 @@
     -moz-transform: rotate(-27deg);
     -webkit-transform: rotate(-27deg);
     display: block;
-    left: -2em;
-    position: relative;
-    top: -1em;
+    left: -1em;
+    position: absolute;
+    top: -0.7em;
     font-size: 0.538em;
   }
 </style>
 <% end %>
 
 <div class="experimental">
-  <sup>New</sup>
-  <a href="<%= comparisons_path %>">W-L Records</a>
+  <ul>
+    <li>
+      <sup>New</sup>
+      <a href="<%= comparisons_path %>">W-L Records</a>
+    <li>
+      <sup>New</sup>
+      <a href="<%= comparisons_path %>">Odds Calculator</a>
+  </ul>
 </div>
 
 <h1>Canuto Tacderan Cup</h1>
