@@ -1,0 +1,116 @@
+<% content_for :head do %>
+<style>
+  body {
+    font-family: Baskerville, "Times New Roman", serif;
+  }
+  #player-selector {
+    position: fixed;
+  }
+  .svg-container {
+    margin-top: 2em;
+  }
+</style>
+<% end %>
+
+<select id="player-selector">
+  <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
+  <option value="<%= k %>"><%= v %></option>
+  <% end %>
+</select>
+<svg class="svg-container"></svg>
+
+<% content_for :script do %>
+<script src="http://d3js.org/d3.v2.min.js"></script>
+<script>
+  var chart = {
+    w: 400,
+    h: 900,
+    nameGap: 100,
+    barStart: function() { return this.nameGap },
+    em: function(units) { return units * 13; }
+  }
+  var namesHash = <%= @players_hash.to_json.html_safe %>;
+  var data = <%= @game_hash.to_json.html_safe %>;
+
+  var x = d3.scale.linear()
+    .domain([0, 1])
+    .range([0, chart.w]);
+  var y = d3.scale.linear()
+    .domain([0, 100])
+    .rangeRound([0, chart.h]);
+
+  var svg = d3.select('svg')
+    .attr('width', chart.w)
+    .attr('height', chart.h);
+
+  $("#player-selector").change(function() {
+    drawComparisons(data[$(this).find(":selected").val()]);
+  }).val("1");
+
+  drawComparisons(data['1']);
+
+  function drawComparisons(dataPoints) {
+    dataPoints = dataPoints.sort(function(a, b) {
+      return d3.descending(a[1][0]-a[1][1], b[1][0]-b[1][1]);
+    });
+    var bars = svg.selectAll('rect')
+      .data(dataPoints);
+    bars.enter().append('rect');
+    bars.transition().duration(1000)
+      .attr('x', function(d) { return chart.barStart(); })
+      .attr('fill', function(d) {
+        if (d[1][0]-d[1][1] > 0) {
+          return "rgb(0, " + (Math.abs(d[1][0]-d[1][1]) * 50) + ", 0)";
+        } else {
+          return "rgb(" + (Math.abs(d[1][0]-d[1][1]) * 50) + ", 0, 0)";
+        }
+      })
+      .attr('y', function(d, i) { return i * 20; })
+      .attr('width', function(d) {
+        var winUnits = d[1][0]-d[1][1] > 0 ? ((d[1][0]-d[1][1]) + 1) : 1;
+        return winUnits * 20;
+      })
+      .attr('height', 15);
+    bars.exit().remove();
+
+    var names = svg.selectAll('text')
+      .data(dataPoints)
+    names.enter().append("text");
+    names.transition().duration(1000)
+      .attr('x', function(d) { return chart.barStart() - chart.em(1); })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr("text-anchor", "end")
+      .text(function(d) {
+        return namesHash[d[0]];
+      });
+    names.exit().remove();
+
+    var plusMinus = svg.selectAll('winLossText')
+      .data(dataPoints)
+    plusMinus.enter().append("text");
+    plusMinus.transition().duration(1000)
+      .attr('x', function(d) { return chart.barStart() + 5; })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr('fill', 'white')
+      .text(function(d) {
+        return ((d[1][0]-d[1][1]) > 0 ? "+" : "") + (d[1][0]-d[1][1]);
+      });
+    plusMinus.exit().remove();
+
+    var record = svg.selectAll('recordText')
+      .data(dataPoints)
+    record.enter().append("text");
+    record.transition().duration(1000)
+      .attr('class', 'win-loss')
+      .attr('x', function(d) {
+        var winUnits = d[1][0]-d[1][1] >= 0 ? (Math.abs(d[1][0]-d[1][1]) + 1) : 1;
+        return chart.barStart() + winUnits * 20;
+      })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .text(function(d) {
+        return "W-L " + d[1][0] + "-" + d[1][1];
+      });
+    record.exit().remove();
+  }
+</script>
+<% end %>

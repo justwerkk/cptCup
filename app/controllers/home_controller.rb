@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  before_filter :calculate_data, :only => [:comparisons, :comparisons2]
   def index
     @player = Player.new
     @players = Player.all
@@ -9,7 +10,9 @@ class HomeController < ApplicationController
     @players_hash = Game.calculate_rankings(Game.all)
   end
 
-  def comparisons
+  private
+
+  def calculate_data
     game_hash = {}
     Game.all.each do |g|
       game_hash[g.winner_one_id] = PlayerComparison.new unless game_hash[g.winner_one_id]
