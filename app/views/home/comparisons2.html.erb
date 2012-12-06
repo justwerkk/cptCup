@@ -91,7 +91,7 @@
     plusMinus.transition().duration(1000)
       .attr('x', function(d) { return chart.barStart() + 5; })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
-      .attr('fill', 'white')
+      .attr('fill', "#fff")
       .text(function(d) {
         return ((d[1][0]-d[1][1]) > 0 ? "+" : "") + (d[1][0]-d[1][1]);
       });
@@ -101,7 +101,6 @@
       .data(dataPoints)
     record.enter().append("text");
     record.transition().duration(1000)
-      .attr('class', 'win-loss')
       .attr('x', function(d) {
         var winUnits = d[1][0]-d[1][1] >= 0 ? (Math.abs(d[1][0]-d[1][1]) + 1) : 1;
         return chart.barStart() + winUnits * 20;
