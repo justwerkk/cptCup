@@ -73,10 +73,11 @@
       .attr('height', 15);
     bars.exit().remove();
 
-    var names = svg.selectAll('text')
+    var names = svg.selectAll('.player-names')
       .data(dataPoints)
     names.enter().append("text");
     names.transition().duration(1000)
+      .attr('class', 'player-names')
       .attr('x', function(d) { return chart.barStart() - chart.em(1); })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .attr("text-anchor", "end")
@@ -85,10 +86,11 @@
       });
     names.exit().remove();
 
-    var plusMinus = svg.selectAll('winLossText')
+    var plusMinus = svg.selectAll('.plus-minus')
       .data(dataPoints)
     plusMinus.enter().append("text");
     plusMinus.transition().duration(1000)
+      .attr('class', 'plus-minus')
       .attr('x', function(d) { return chart.barStart() + 5; })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .attr('fill', "#fff")
@@ -97,10 +99,11 @@
       });
     plusMinus.exit().remove();
 
-    var record = svg.selectAll('recordText')
+    var record = svg.selectAll('.player-record')
       .data(dataPoints)
     record.enter().append("text");
     record.transition().duration(1000)
+      .attr('class', 'player-record')
       .attr('x', function(d) {
         var winUnits = d[1][0]-d[1][1] >= 0 ? (Math.abs(d[1][0]-d[1][1]) + 1) : 1;
         return chart.barStart() + winUnits * 20;
