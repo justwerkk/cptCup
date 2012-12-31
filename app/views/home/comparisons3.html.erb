@@ -19,7 +19,8 @@
     <% end %>
   </select>
   <select id="sort-type">
-    <option>Plus/Minus</option>
+    <option value="plusminus">Plus/Minus</option>
+    <option value="games">Most Games</option>
     <option value="wins">Most Wins</option>
     <option value="losses">Most Losses</option>
     <option value="domination">Domination</option>
@@ -35,8 +36,9 @@
     this.id = id;
     this.wins = wins;
     this.losses = losses;
+    this.totalGames = this.wins + this.losses
     this.plusMinus = this.wins - this.losses;
-    this.winRatio = this.wins / (this.wins + this.losses);
+    this.winRatio = this.wins / (this.totalGames);
   }
   var Player = function(id, records) {
     this.id = id;
@@ -57,6 +59,7 @@
     w: 400,
     h: 900,
     nameGap: 100,
+    unitWidth: 20,
     barStart: function() { return this.nameGap },
     em: function(units) { return units * 13; }
   }
@@ -86,30 +89,48 @@
     drawComparisons(dataRecords[$("#player-selector").find(":selected").val()], $(this).val());
   });
 
-  drawComparisons(dataRecords['1']);
+  drawComparisons(dataRecords['1'], "plusminus");
 
-  function drawComparisons(player, sortType) {
-    if (typeof(sortType) == "undefined") {
-      sortType = "";
-    }
-    var dataPoints = player.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+  function drawComparisons(playerData, sortType) {
+    var dataPoints = transformData(playerData.versusArray, sortType);
+    drawBars(dataPoints, sortType);
+    drawNamesLabel(dataPoints);
+    drawPlusMinusLabel(dataPoints, sortType);
+    drawAgainstLabel(dataPoints, sortType);
+  }
+
+  function transformData(versusArray, sortType) {
+    var data = versusArray.sort(function(vsPlayerA, vsPlayerB) {
       switch(sortType) {
+        case "plusminus":
+          return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+        case "games":
+          return d3.descending(vsPlayerA.totalGames, vsPlayerB.totalGames);
         case "wins":
           return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
         case "losses":
           return d3.descending(vsPlayerA.losses, vsPlayerB.losses);
-        default:
-          return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+        case "domination":
+          return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio)
+        case "pwned":
+          return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio)
       }
     });
 
-    drawBars(dataPoints);
-    drawNamesLabel(dataPoints);
-    drawPlusMinusLabel(dataPoints);
-    drawAgainstLabel(dataPoints, sortType);
+    if (sortType == "domination") {
+      data = data.filter(function(vsPlayer) {
+        return vsPlayer.winRatio >= 0.75 && vsPlayer.totalGames >= 2;
+      });
+    } else if (sortType == "pwned") {
+      data = data.filter(function(vsPlayer) {
+        return vsPlayer.winRatio <= 0.25 && vsPlayer.totalGames >= 2;
+      });
+    }
+
+    return data;
   }
 
-  function drawBars(data) {
+  function drawBars(data, sortType) {
     var bars = svg.selectAll('rect')
       .data(data);
     bars.enter().append('rect');
@@ -117,17 +138,19 @@
       .attr('class', 'bar')
       .attr('x', function(d) { return chart.barStart(); })
       .attr('fill', function(d) {
-        if (d.plusMinus > 0) {
-          return "rgb(0, " + (Math.abs(d.plusMinus) * 50) + ", 0)";
-        } else {
-          return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
+        switch(sortType) {
+          case "plusminus":
+            if (d.plusMinus > 0) {
+              return "rgb(0, " + (Math.abs(d.plusMinus) * 50) + ", 0)";
+            } else {
+              return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
+            }
+          default:
+            return "#000";
         }
       })
-      .attr('y', function(d, i) { return i * 20; })
-      .attr('width', function(d) {
-        var winUnits = d.plusMinus > 0 ? (d.plusMinus + 1) : 1;
-        return winUnits * 20;
-      })
+      .attr('y', function(d, i) { return i * chart.unitWidth; })
+      .attr('width', function(d) { return barWidth(d, sortType) * chart.unitWidth; })
       .attr('height', 15);
     bars.exit().remove();
   }
@@ -139,25 +162,33 @@
     label.transition().duration(1000)
       .attr('class', 'player-names')
       .attr('x', function(d) { return chart.barStart() - chart.em(1); })
-      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .attr("text-anchor", "end")
-      .text(function(d) {
-        return namesHash[d.id];
-      });
+      .text(function(d) { return namesHash[d.id]; });
     label.exit().remove();
   }
 
-  function drawPlusMinusLabel(data) {
+  function drawPlusMinusLabel(data, sortType) {
     var label = svg.selectAll('.plus-minus')
       .data(data)
     label.enter().append("text");
     label.transition().duration(1000)
       .attr('class', 'plus-minus')
       .attr('x', function(d) { return chart.barStart() + 5; })
-      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .attr('fill', "#fff")
       .text(function(d) {
-        return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
+        switch(sortType) {
+          case "plusminus":
+            return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
+          case "games":
+            return d.totalGames
+          case "domination":
+          case "pwned":
+            return d.winRatio.toFixed(3);
+          default:
+            return "";
+        }
       });
     label.exit().remove();
   }
@@ -168,22 +199,38 @@
     label.enter().append("text");
     label.transition().duration(1000)
       .attr('class', 'against-label')
-      .attr('x', function(d) {
-        var winUnits = d.plusMinus >= 0 ? (Math.abs(d.plusMinus) + 1) : 1;
-        return chart.barStart() + winUnits * 20 + 5;
-      })
-      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr('x', function(d) { return chart.barStart() + barWidth(d, sortType) * chart.unitWidth + 5; })
+      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .text(function(d) {
         switch(sortType) {
-          case "wins":
-            return d.wins + " Wins / " + d.losses + " Losses";
-          case "losses":
-            return d.losses + " Losses / " + d.wins + " Wins";
-          default:
+          case "plusminus":
+          case "domination":
+          case "pwned":
             return "W-L " + d.wins + "-" + d.losses;
+          case "wins":
+            return d.wins + " W (" + d.losses + " L)";
+          case "losses":
+            return d.losses + " L (" + d.wins + " W)";
+          default:
+            return "";
         }
       });
     label.exit().remove();
+  }
+
+  function barWidth(vsPlayer, sortType) {
+    switch(sortType) {
+      case "plusminus":
+        return Math.max(vsPlayer.plusMinus,0) + 1;
+      case "games":
+        return vsPlayer.totalGames;
+      case "wins":
+        return vsPlayer.wins + 1;
+      case "losses":
+        return vsPlayer.losses + 1;
+      case "domination":
+      case "pwned":
+    }   return 5;
   }
 </script>
 <% end %>
