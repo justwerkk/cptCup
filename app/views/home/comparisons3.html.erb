@@ -23,6 +23,7 @@
     <option value="games">Most Games</option>
     <option value="wins">Most Wins</option>
     <option value="losses">Most Losses</option>
+    <option value="winLoss">Win/Loss Ratio</option>
     <option value="domination">Domination</option>
     <option value="pwned">Pwned</option>
   </select>
@@ -56,7 +57,7 @@
     initializeVersus();
   }
   var chart = {
-    w: 400,
+    w: 500,
     h: 900,
     nameGap: 100,
     unitWidth: 20,
@@ -110,10 +111,27 @@
           return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
         case "losses":
           return d3.descending(vsPlayerA.losses, vsPlayerB.losses);
+        case "winLoss":
         case "domination":
-          return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio)
+          if (vsPlayerA.winRatio == vsPlayerB.winRatio) {
+            if (vsPlayerA.plusMinus == vsPlayerB.plusMinus) {
+              return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
+            } else {
+              return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+            }
+          } else {
+            return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio);
+          }
         case "pwned":
-          return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio)
+        if (vsPlayerA.winRatio == vsPlayerB.winRatio) {
+          if (vsPlayerA.plusMinus == vsPlayerB.plusMinus) {
+            return d3.descending(vsPlayerB.wins, vsPlayerA.wins);
+          } else {
+            return d3.descending(vsPlayerB.plusMinus, vsPlayerA.plusMinus);
+          }
+        } else {
+          return d3.descending(vsPlayerB.winRatio, vsPlayerA.winRatio);
+        }
       }
     });
 
@@ -183,6 +201,7 @@
             return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
           case "games":
             return d.totalGames
+          case "winLoss":
           case "domination":
           case "pwned":
             return d.winRatio.toFixed(3);
@@ -203,16 +222,12 @@
       .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .text(function(d) {
         switch(sortType) {
-          case "plusminus":
-          case "domination":
-          case "pwned":
-            return "W-L " + d.wins + "-" + d.losses;
           case "wins":
             return d.wins + " W (" + d.losses + " L)";
           case "losses":
             return d.losses + " L (" + d.wins + " W)";
           default:
-            return "";
+            return "W-L " + d.wins + "-" + d.losses;
         }
       });
     label.exit().remove();
@@ -228,6 +243,8 @@
         return vsPlayer.wins + 1;
       case "losses":
         return vsPlayer.losses + 1;
+      case "winLoss":
+        return (vsPlayer.winRatio * 10) + 3;
       case "domination":
       case "pwned":
     }   return 5;
