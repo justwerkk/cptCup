@@ -26,6 +26,10 @@
     this.id = id;
     this.wins = wins;
     this.losses = losses;
+    var self = this;
+    this.plusMinus = function() {
+      return self.wins - self.losses;
+    }
   }
   var Player = function(id, records) {
     this.id = id;
@@ -68,14 +72,14 @@
     .attr('height', chart.h);
 
   $("#player-selector").change(function() {
-    drawComparisons(data[$(this).find(":selected").val()]);
+    drawComparisons(dataRecords[$(this).find(":selected").val()]);
   }).val("1");
 
-  drawComparisons(data['1']);
+  drawComparisons(dataRecords['1']);
 
   function drawComparisons(dataPoints) {
-    dataPoints = dataPoints.sort(function(a, b) {
-      return d3.descending(a[1][0]-a[1][1], b[1][0]-b[1][1]);
+    dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+      return d3.descending(vsPlayerA.plusMinus(), vsPlayerB.plusMinus());
     });
     var bars = svg.selectAll('rect')
       .data(dataPoints);
@@ -84,15 +88,17 @@
       .attr('class', 'bar')
       .attr('x', function(d) { return chart.barStart(); })
       .attr('fill', function(d) {
-        if (d[1][0]-d[1][1] > 0) {
-          return "rgb(0, " + (Math.abs(d[1][0]-d[1][1]) * 50) + ", 0)";
+        var plusMinus = d.plusMinus();
+        if (plusMinus > 0) {
+          return "rgb(0, " + (Math.abs(plusMinus) * 50) + ", 0)";
         } else {
-          return "rgb(" + (Math.abs(d[1][0]-d[1][1]) * 50) + ", 0, 0)";
+          return "rgb(" + (Math.abs(plusMinus) * 50) + ", 0, 0)";
         }
       })
       .attr('y', function(d, i) { return i * 20; })
       .attr('width', function(d) {
-        var winUnits = d[1][0]-d[1][1] > 0 ? ((d[1][0]-d[1][1]) + 1) : 1;
+        var plusMinus = d.plusMinus();
+        var winUnits = plusMinus > 0 ? (plusMinus + 1) : 1;
         return winUnits * 20;
       })
       .attr('height', 15);
@@ -107,7 +113,7 @@
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .attr("text-anchor", "end")
       .text(function(d) {
-        return namesHash[d[0]];
+        return namesHash[d.id];
       });
     names.exit().remove();
 
@@ -120,7 +126,8 @@
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .attr('fill', "#fff")
       .text(function(d) {
-        return ((d[1][0]-d[1][1]) > 0 ? "+" : "") + (d[1][0]-d[1][1]);
+        var plusMinus = d.plusMinus();
+        return (plusMinus > 0 ? "+" : "") + plusMinus;
       });
     plusMinus.exit().remove();
 
@@ -130,12 +137,13 @@
     record.transition().duration(1000)
       .attr('class', 'player-record')
       .attr('x', function(d) {
-        var winUnits = d[1][0]-d[1][1] >= 0 ? (Math.abs(d[1][0]-d[1][1]) + 1) : 1;
+        var plusMinus = d.plusMinus();
+        var winUnits = plusMinus >= 0 ? (Math.abs(plusMinus) + 1) : 1;
         return chart.barStart() + winUnits * 20;
       })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .text(function(d) {
-        return "W-L " + d[1][0] + "-" + d[1][1];
+        return "W-L " + d.wins + "-" + d.losses;
       });
     record.exit().remove();
   }
