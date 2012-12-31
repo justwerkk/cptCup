@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_filter :calculate_data, :only => [:comparisons, :comparisons2]
+  before_filter :calculate_data, :only => [:comparisons, :comparisons2, :comparisons3]
   def index
     @player = Player.new
     @players = Player.all

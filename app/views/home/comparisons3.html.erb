@@ -1,0 +1,171 @@
+<% content_for :head do %>
+<style>
+  body {
+    font-family: Baskerville, "Times New Roman", serif;
+  }
+  .controls {
+    position: fixed;
+  }
+  #svg-container {
+    margin-top: 2em;
+  }
+</style>
+<% end %>
+
+<div class="controls">
+  <select id="player-selector">
+    <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
+    <option value="<%= k %>"><%= v %></option>
+    <% end %>
+  </select>
+  <select id="second-filter">
+    <option>Plus/Minus</option>
+    <option value="wins">Most Wins</option>
+    <option value="losses">Most Losses</option>
+  </select>
+</div>
+<svg id="svg-container"></svg>
+
+<% content_for :script do %>
+<script src="http://d3js.org/d3.v2.min.js"></script>
+<script>
+  var VsPlayer = function(id, wins, losses) {
+    this.id = id;
+    this.wins = wins;
+    this.losses = losses;
+    this.plusMinus = this.wins - this.losses;
+  }
+  var Player = function(id, records) {
+    this.id = id;
+    this.records = records;
+    this.versusArray = [];
+    var self = this;
+    var addVersus = function(vsPlayer) {
+      self.versusArray.push(vsPlayer);
+    }
+    var initializeVersus = function() {
+      $.each(self.records, function(i, idWinLossArr) {
+        addVersus(new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]));
+      });
+    }
+    initializeVersus();
+  }
+  var chart = {
+    w: 400,
+    h: 900,
+    nameGap: 100,
+    barStart: function() { return this.nameGap },
+    em: function(units) { return units * 13; }
+  }
+  var namesHash = <%= @players_hash.to_json.html_safe %>;
+  var data = <%= @game_hash.to_json.html_safe %>;
+  var dataRecords = {};
+  $.each(data, function(k, v) {
+    dataRecords[k] = new Player(k, v);
+  });
+
+  var x = d3.scale.linear()
+    .domain([0, 1])
+    .range([0, chart.w]);
+  var y = d3.scale.linear()
+    .domain([0, 100])
+    .rangeRound([0, chart.h]);
+
+  var svg = d3.select('svg')
+    .attr('width', chart.w)
+    .attr('height', chart.h);
+
+  $("#player-selector").change(function() {
+    drawComparisons(dataRecords[$(this).find(":selected").val()]);
+  }).val("1");
+
+  $("#second-filter").change(function() {
+    drawComparisons(dataRecords[$("#player-selector").find(":selected").val()], $(this).val());
+  });
+
+  drawComparisons(dataRecords['1']);
+
+  function drawComparisons(dataPoints, sortType) {
+    if (typeof(sortType) == "undefined") {
+      sortType = "";
+    }
+    switch(sortType) {
+      case "wins":
+        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+          return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
+        });
+        break;
+      case "losses":
+        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+          return d3.descending(vsPlayerA.losses, vsPlayerB.losses);
+        });
+        break;
+      default:
+        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+          return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+        });
+    }
+    var bars = svg.selectAll('rect')
+      .data(dataPoints);
+    bars.enter().append('rect');
+    bars.transition().duration(1000)
+      .attr('class', 'bar')
+      .attr('x', function(d) { return chart.barStart(); })
+      .attr('fill', function(d) {
+        if (d.plusMinus > 0) {
+          return "rgb(0, " + (Math.abs(d.plusMinus) * 50) + ", 0)";
+        } else {
+          return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
+        }
+      })
+      .attr('y', function(d, i) { return i * 20; })
+      .attr('width', function(d) {
+        var winUnits = d.plusMinus > 0 ? (d.plusMinus + 1) : 1;
+        return winUnits * 20;
+      })
+      .attr('height', 15);
+    bars.exit().remove();
+
+    var names = svg.selectAll('.player-names')
+      .data(dataPoints)
+    names.enter().append("text");
+    names.transition().duration(1000)
+      .attr('class', 'player-names')
+      .attr('x', function(d) { return chart.barStart() - chart.em(1); })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr("text-anchor", "end")
+      .text(function(d) {
+        return namesHash[d.id];
+      });
+    names.exit().remove();
+
+    var plusMinus = svg.selectAll('.plus-minus')
+      .data(dataPoints)
+    plusMinus.enter().append("text");
+    plusMinus.transition().duration(1000)
+      .attr('class', 'plus-minus')
+      .attr('x', function(d) { return chart.barStart() + 5; })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .attr('fill', "#fff")
+      .text(function(d) {
+        return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
+      });
+    plusMinus.exit().remove();
+
+    var record = svg.selectAll('.player-record')
+      .data(dataPoints)
+    record.enter().append("text");
+    record.transition().duration(1000)
+      .attr('class', 'player-record')
+      .attr('x', function(d) {
+        var winUnits = d.plusMinus >= 0 ? (Math.abs(d.plusMinus) + 1) : 1;
+        return chart.barStart() + winUnits * 20;
+      })
+      .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
+      .text(function(d) {
+        return "W-L " + d.wins + "-" + d.losses;
+      });
+    record.exit().remove();
+  }
+</script>
+<% end %>
