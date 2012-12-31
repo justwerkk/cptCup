@@ -18,10 +18,12 @@
     <option value="<%= k %>"><%= v %></option>
     <% end %>
   </select>
-  <select id="second-filter">
+  <select id="sort-type">
     <option>Plus/Minus</option>
     <option value="wins">Most Wins</option>
     <option value="losses">Most Losses</option>
+    <option value="domination">Domination</option>
+    <option value="pwned">Pwned</option>
   </select>
 </div>
 <svg id="svg-container"></svg>
@@ -34,6 +36,7 @@
     this.wins = wins;
     this.losses = losses;
     this.plusMinus = this.wins - this.losses;
+    this.winRatio = this.wins / (this.wins + this.losses);
   }
   var Player = function(id, records) {
     this.id = id;
@@ -76,37 +79,39 @@
     .attr('height', chart.h);
 
   $("#player-selector").change(function() {
-    drawComparisons(dataRecords[$(this).find(":selected").val()]);
+    drawComparisons(dataRecords[$(this).find(":selected").val()], $('#sort-type').val());
   }).val("1");
 
-  $("#second-filter").change(function() {
+  $("#sort-type").change(function() {
     drawComparisons(dataRecords[$("#player-selector").find(":selected").val()], $(this).val());
   });
 
   drawComparisons(dataRecords['1']);
 
-  function drawComparisons(dataPoints, sortType) {
+  function drawComparisons(player, sortType) {
     if (typeof(sortType) == "undefined") {
       sortType = "";
     }
-    switch(sortType) {
-      case "wins":
-        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+    var dataPoints = player.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+      switch(sortType) {
+        case "wins":
           return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
-        });
-        break;
-      case "losses":
-        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+        case "losses":
           return d3.descending(vsPlayerA.losses, vsPlayerB.losses);
-        });
-        break;
-      default:
-        dataPoints = dataPoints.versusArray.sort(function(vsPlayerA, vsPlayerB) {
+        default:
           return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
-        });
-    }
+      }
+    });
+
+    drawBars(dataPoints);
+    drawNamesLabel(dataPoints);
+    drawPlusMinusLabel(dataPoints);
+    drawAgainstLabel(dataPoints, sortType);
+  }
+
+  function drawBars(data) {
     var bars = svg.selectAll('rect')
-      .data(dataPoints);
+      .data(data);
     bars.enter().append('rect');
     bars.transition().duration(1000)
       .attr('class', 'bar')
@@ -125,11 +130,13 @@
       })
       .attr('height', 15);
     bars.exit().remove();
+  }
 
-    var names = svg.selectAll('.player-names')
-      .data(dataPoints)
-    names.enter().append("text");
-    names.transition().duration(1000)
+  function drawNamesLabel(data) {
+    var label = svg.selectAll('.player-names')
+      .data(data)
+    label.enter().append("text");
+    label.transition().duration(1000)
       .attr('class', 'player-names')
       .attr('x', function(d) { return chart.barStart() - chart.em(1); })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
@@ -137,12 +144,14 @@
       .text(function(d) {
         return namesHash[d.id];
       });
-    names.exit().remove();
+    label.exit().remove();
+  }
 
-    var plusMinus = svg.selectAll('.plus-minus')
-      .data(dataPoints)
-    plusMinus.enter().append("text");
-    plusMinus.transition().duration(1000)
+  function drawPlusMinusLabel(data) {
+    var label = svg.selectAll('.plus-minus')
+      .data(data)
+    label.enter().append("text");
+    label.transition().duration(1000)
       .attr('class', 'plus-minus')
       .attr('x', function(d) { return chart.barStart() + 5; })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
@@ -150,22 +159,31 @@
       .text(function(d) {
         return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
       });
-    plusMinus.exit().remove();
+    label.exit().remove();
+  }
 
-    var record = svg.selectAll('.player-record')
-      .data(dataPoints)
-    record.enter().append("text");
-    record.transition().duration(1000)
-      .attr('class', 'player-record')
+  function drawAgainstLabel(data, sortType) {
+    var label = svg.selectAll('.against-label')
+      .data(data)
+    label.enter().append("text");
+    label.transition().duration(1000)
+      .attr('class', 'against-label')
       .attr('x', function(d) {
         var winUnits = d.plusMinus >= 0 ? (Math.abs(d.plusMinus) + 1) : 1;
-        return chart.barStart() + winUnits * 20;
+        return chart.barStart() + winUnits * 20 + 5;
       })
       .attr('y', function(d, i) { return (i * 20) + chart.em(1); })
       .text(function(d) {
-        return "W-L " + d.wins + "-" + d.losses;
+        switch(sortType) {
+          case "wins":
+            return d.wins + " Wins / " + d.losses + " Losses";
+          case "losses":
+            return d.losses + " Losses / " + d.wins + " Wins";
+          default:
+            return "W-L " + d.wins + "-" + d.losses;
+        }
       });
-    record.exit().remove();
+    label.exit().remove();
   }
 </script>
 <% end %>
