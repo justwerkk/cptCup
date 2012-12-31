@@ -163,8 +163,16 @@
             } else {
               return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
             }
-          default:
+          case "games":
+          case "domination":
+          case "pwned":
             return "#000";
+          default:
+            if (barWidth(d, sortType) > 1 && sortType != "losses") {
+              return "rgb(0, " + (barWidth(d, sortType) * 20) + ", 0)";
+            } else {
+              return "rgb(" + (barWidth(d, sortType) * 20) + ", 0, 0)";
+            }
         }
       })
       .attr('y', function(d, i) { return i * chart.unitWidth; })
