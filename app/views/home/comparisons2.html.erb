@@ -6,7 +6,7 @@
   #player-selector {
     position: fixed;
   }
-  .svg-container {
+  #svg-container {
     margin-top: 2em;
   }
 </style>
@@ -17,11 +17,30 @@
   <option value="<%= k %>"><%= v %></option>
   <% end %>
 </select>
-<svg class="svg-container"></svg>
+<svg id="svg-container"></svg>
 
 <% content_for :script do %>
 <script src="http://d3js.org/d3.v2.min.js"></script>
 <script>
+  var VsPlayer = function(id, wins, losses) {
+    this.id = id;
+    this.wins = wins;
+    this.losses = losses;
+  }
+  var Player = function(id, records) {
+    this.id = id;
+    this.records = records;
+    this.versusArray = [];
+    var self = this;
+    this.initializeVersus = function() {
+      $.each(self.records, function(i, idWinLossArr) {
+        self.addVersus(new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]));
+      });
+    }
+    this.addVersus = function(vsPlayer) {
+      self.versusArray.push(vsPlayer);
+    }
+  }
   var chart = {
     w: 400,
     h: 900,
@@ -31,6 +50,11 @@
   }
   var namesHash = <%= @players_hash.to_json.html_safe %>;
   var data = <%= @game_hash.to_json.html_safe %>;
+  var dataRecords = {};
+  $.each(data, function(k, v) {
+    dataRecords[k] = new Player(k, v);
+    dataRecords[k].initializeVersus();
+  });
 
   var x = d3.scale.linear()
     .domain([0, 1])
@@ -57,6 +81,7 @@
       .data(dataPoints);
     bars.enter().append('rect');
     bars.transition().duration(1000)
+      .attr('class', 'bar')
       .attr('x', function(d) { return chart.barStart(); })
       .attr('fill', function(d) {
         if (d[1][0]-d[1][1] > 0) {
