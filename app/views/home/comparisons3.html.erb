@@ -225,7 +225,7 @@
         }
       })
       .attr('y', function(d, i) { return i * chart.unitWidth; })
-      .attr('width', function(d) { return barWidth(d, sortType) * chart.unitWidth; })
+      .attr('width', function(d) { return barWidth(d, sortType) * chart.em(2); })
       .attr('height', 15);
     bars.exit().remove();
   }
@@ -264,8 +264,10 @@
           case "domination":
           case "pwned":
             return d.winRatio.toFixed(3);
-          default:
-            return "";
+          case "wins":
+            return d.wins;
+          case "losses":
+            return d.losses;
         }
       });
     label.exit().remove();
@@ -277,16 +279,12 @@
     label.enter().append("text");
     label.transition().duration(1000)
       .attr('class', 'against-label')
-      .attr('x', function(d) { return chart.barStart() + barWidth(d, sortType) * chart.unitWidth + 5; })
+      .attr('x', function(d) { return chart.barStart() + barWidth(d, sortType) * chart.em(2) + 5; })
       .attr('y', textYCoord)
       .text(function(d) {
         switch(sortType) {
           case "ranking":
             return "";
-          case "wins":
-            return d.wins + " W (" + d.losses + " L)";
-          case "losses":
-            return d.losses + " L (" + d.wins + " W)";
           default:
             return "W-L " + d.wins + "-" + d.losses;
         }
@@ -299,15 +297,15 @@
       case "ranking":
         return 0;
       case "plusminus":
-        return Math.max(player.plusMinus,0) + 1;
+        return Math.max(player.plusMinus, 0) + 1;
       case "games":
-        return player.totalGames;
+        return player.totalGames / 10;
       case "wins":
-        return player.wins + 1;
+        return player.wins / 10 ;
       case "losses":
-        return player.losses + 1;
+        return player.losses / 10;
       case "winLoss":
-        return (player.winRatio * 10) + 3;
+        return (player.winRatio * 10) + 1;
       case "domination":
       case "pwned":
     }   return 5;
