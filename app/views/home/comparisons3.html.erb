@@ -9,6 +9,10 @@
   #svg-container {
     margin-top: 2em;
   }
+  .bar:hover,
+  .player-names:hover {
+    cursor: pointer;
+  }
 </style>
 <% end %>
 
@@ -130,8 +134,6 @@
     drawComparisons(id, type);
   });
 
-  drawComparisons('all', "ranking");
-
   function getPlayerData(playerId) {
     if (isNaN(playerId)) {
       return $.map(dataRecords, function (value, key) { return value; });;
@@ -200,10 +202,11 @@
 
   function drawBars(data, sortType) {
     var bars = svg.selectAll('rect')
-      .data(data);
+      .data(data)
+      .on('click', function(d) { $('#player-selector').val(d.id).change(); });
     bars.enter().append('rect');
     bars.transition().duration(1000)
-      .attr('class', 'bar')
+      .attr('class', "bar")
       .attr('x', function(d) { return chart.barStart(); })
       .attr('fill', function(d) {
         switch(sortType) {
@@ -236,10 +239,11 @@
 
   function drawNamesLabel(data) {
     var label = svg.selectAll('.player-names')
-      .data(data);
+      .data(data)
+      .on('click', function(d) { $('#player-selector').val(d.id).change(); });
     label.enter().append("text");
     label.transition().duration(1000)
-      .attr('class', 'player-names')
+      .attr('class', "player-names")
       .attr('x', function(d) { return chart.barStart() - chart.em(1); })
       .attr('y', textYCoord)
       .attr("text-anchor", "end")
@@ -318,5 +322,7 @@
   function textYCoord(d, i) {
     return (i * chart.unitWidth) + chart.em(1);
   }
+
+  drawComparisons('all', "ranking");
 </script>
 <% end %>
