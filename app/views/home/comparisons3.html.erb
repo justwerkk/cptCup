@@ -20,6 +20,7 @@
     <% end %>
   </select>
   <select id="sort-type">
+    <option value="ranking">Ranking</option>
     <option value="plusminus">Plus/Minus</option>
     <option value="games">Most Games</option>
     <option value="wins">Most Wins</option>
@@ -48,10 +49,13 @@
     this.versusArray = [];
     this.wins = 0;
     this.losses = 0;
-    this.totalGames = 0;
+    this.score = 1200;
     var self = this;
     this.numGames = function() {
       return self.versusArray.length;
+    }
+    this.setRankingScore = function(s) {
+      this.score = s;
     }
     var addVersus = function(vsPlayer) {
       self.versusArray.push(vsPlayer);
@@ -80,11 +84,15 @@
     barStart: function() { return this.nameGap },
     em: function(units) { return units * 13; }
   }
+  var rankings = <%= @player_rankings.to_json.html_safe %>;
   var namesHash = <%= @players_hash.to_json.html_safe %>;
   var data = <%= @game_hash.to_json.html_safe %>;
   var dataRecords = {};
   $.each(data, function(k, v) {
     dataRecords[k] = new Player(k, v);
+  });
+  $.each(rankings, function(k, v) {
+    dataRecords[k].setRankingScore(v);
   });
 
   var x = d3.scale.linear()
@@ -99,14 +107,26 @@
     .attr('height', chart.h);
 
   $("#player-selector").change(function() {
+    var id = $(this).find(":selected").val();
+    var type = $("#sort-type").val();
+    if (id != "all" && type == "ranking") {
+      $("#sort-type").val("plusminus");
+      type = "plusminus";
+    }
     drawComparisons($(this).find(":selected").val(), $('#sort-type').val());
-  }).val("1");
+  }).val("all");
 
   $("#sort-type").change(function() {
-    drawComparisons($("#player-selector").find(":selected").val(), $(this).val());
+    var id = $("#player-selector").find(":selected").val();
+    var type = $(this).val();
+    if (type == "ranking") {
+      $("#player-selector").val('all');
+      id = "all"
+    }
+    drawComparisons(id, type);
   });
 
-  drawComparisons('all', "plusminus");
+  drawComparisons('all', "ranking");
 
   function getPlayerData(playerId) {
     if (isNaN(playerId)) {
@@ -120,41 +140,43 @@
     var dataPoints = transformData(getPlayerData(playerId), sortType);
     drawBars(dataPoints, sortType);
     drawNamesLabel(dataPoints);
-    drawPlusMinusLabel(dataPoints, sortType);
+    drawBarLabel(dataPoints, sortType);
     drawAgainstLabel(dataPoints, sortType);
   }
 
   function transformData(data, sortType) {
-    var data = data.sort(function(vsPlayerA, vsPlayerB) {
+    var data = data.sort(function(p1, p2) {
       switch(sortType) {
+        case "ranking":
+          return d3.descending(p1.score, p2.score);
         case "plusminus":
-          return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+          return d3.descending(p1.plusMinus, p2.plusMinus);
         case "games":
-          return d3.descending(vsPlayerA.totalGames, vsPlayerB.totalGames);
+          return d3.descending(p1.totalGames, p2.totalGames);
         case "wins":
-          return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
+          return d3.descending(p1.wins, p2.wins);
         case "losses":
-          return d3.descending(vsPlayerA.losses, vsPlayerB.losses);
+          return d3.descending(p1.losses, p2.losses);
         case "winLoss":
         case "domination":
-          if (vsPlayerA.winRatio == vsPlayerB.winRatio) {
-            if (vsPlayerA.plusMinus == vsPlayerB.plusMinus) {
-              return d3.descending(vsPlayerA.wins, vsPlayerB.wins);
+          if (p1.winRatio == p2.winRatio) {
+            if (p1.plusMinus == p2.plusMinus) {
+              return d3.descending(p1.wins, p2.wins);
             } else {
-              return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
+              return d3.descending(p1.plusMinus, p2.plusMinus);
             }
           } else {
-            return d3.descending(vsPlayerA.winRatio, vsPlayerB.winRatio);
+            return d3.descending(p1.winRatio, p2.winRatio);
           }
         case "pwned":
-        if (vsPlayerA.winRatio == vsPlayerB.winRatio) {
-          if (vsPlayerA.plusMinus == vsPlayerB.plusMinus) {
-            return d3.descending(vsPlayerB.wins, vsPlayerA.wins);
+        if (p1.winRatio == p2.winRatio) {
+          if (p1.plusMinus == p2.plusMinus) {
+            return d3.descending(p2.wins, p1.wins);
           } else {
-            return d3.descending(vsPlayerB.plusMinus, vsPlayerA.plusMinus);
+            return d3.descending(p2.plusMinus, p1.plusMinus);
           }
         } else {
-          return d3.descending(vsPlayerB.winRatio, vsPlayerA.winRatio);
+          return d3.descending(p2.winRatio, p1.winRatio);
         }
       }
     });
@@ -187,11 +209,14 @@
             } else {
               return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
             }
+          case "ranking":
+          case "winLoss":
           case "games":
           case "domination":
           case "pwned":
             return "#000";
-          default:
+          case "wins":
+          case "losses":
             if (barWidth(d, sortType) > 1 && sortType != "losses") {
               return "rgb(0, " + (barWidth(d, sortType) * 20) + ", 0)";
             } else {
@@ -218,7 +243,7 @@
     label.exit().remove();
   }
 
-  function drawPlusMinusLabel(data, sortType) {
+  function drawBarLabel(data, sortType) {
     var label = svg.selectAll('.plus-minus')
       .data(data)
     label.enter().append("text");
@@ -226,13 +251,15 @@
       .attr('class', 'plus-minus')
       .attr('x', function(d) { return chart.barStart() + 5; })
       .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
-      .attr('fill', "#fff")
+      .attr('fill', function(d) { return sortType == "ranking" ? "#000" : "#fff"; })
       .text(function(d) {
         switch(sortType) {
+          case "ranking":
+            return d.score.toFixed(2);
           case "plusminus":
             return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
           case "games":
-            return d.totalGames
+            return d.totalGames;
           case "winLoss":
           case "domination":
           case "pwned":
@@ -254,6 +281,8 @@
       .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .text(function(d) {
         switch(sortType) {
+          case "ranking":
+            return "";
           case "wins":
             return d.wins + " W (" + d.losses + " L)";
           case "losses":
@@ -265,18 +294,20 @@
     label.exit().remove();
   }
 
-  function barWidth(vsPlayer, sortType) {
+  function barWidth(player, sortType) {
     switch(sortType) {
+      case "ranking":
+        return 0;
       case "plusminus":
-        return Math.max(vsPlayer.plusMinus,0) + 1;
+        return Math.max(player.plusMinus,0) + 1;
       case "games":
-        return vsPlayer.totalGames;
+        return player.totalGames;
       case "wins":
-        return vsPlayer.wins + 1;
+        return player.wins + 1;
       case "losses":
-        return vsPlayer.losses + 1;
+        return player.losses + 1;
       case "winLoss":
-        return (vsPlayer.winRatio * 10) + 3;
+        return (player.winRatio * 10) + 3;
       case "domination":
       case "pwned":
     }   return 5;

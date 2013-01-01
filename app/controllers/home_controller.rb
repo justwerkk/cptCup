@@ -28,5 +28,6 @@ class HomeController < ApplicationController
     @game_hash = {}
     game_hash.to_a.each {|arr| @game_hash[arr.first] = arr.last.against_hash.to_a}
     @players_hash = Player.all.inject({}) {|hash, p| hash[p.id] = p.name; hash}
+    @player_rankings = Game.calculate_rankings(Game.all)
   end
 end
