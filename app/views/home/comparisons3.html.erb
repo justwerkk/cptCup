@@ -13,22 +13,26 @@
 <% end %>
 
 <div class="controls">
-  <select id="player-selector">
-    <option value="all">--</option>
-    <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
-    <option value="<%= k %>"><%= v %></option>
-    <% end %>
-  </select>
-  <select id="sort-type">
-    <option value="ranking">Ranking</option>
-    <option value="plusminus">Plus/Minus</option>
-    <option value="games">Most Games</option>
-    <option value="wins">Most Wins</option>
-    <option value="losses">Most Losses</option>
-    <option value="winLoss">Win/Loss Ratio</option>
-    <option value="domination">Domination</option>
-    <option value="pwned">Pwned</option>
-  </select>
+  <label> Player:
+    <select id="player-selector">
+      <option value="all">--</option>
+      <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
+      <option value="<%= k %>"><%= v %></option>
+      <% end %>
+    </select>
+  </label>
+  <label> Sort By:
+    <select id="sort-type">
+      <option value="ranking">Ranking</option>
+      <option value="plusminus">Plus/Minus</option>
+      <option value="games">Most Games</option>
+      <option value="wins">Most Wins</option>
+      <option value="losses">Most Losses</option>
+      <option value="winLoss">Win/Loss Ratio</option>
+      <option value="domination">Domination</option>
+      <option value="pwned">Pwned</option>
+    </select>
+  </label>
 </div>
 <svg id="svg-container"></svg>
 
