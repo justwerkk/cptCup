@@ -14,6 +14,7 @@
 
 <div class="controls">
   <select id="player-selector">
+    <option value="all">--</option>
     <% @players_hash.sort_by { |id, name| name.downcase }.each do |k,v| %>
     <option value="<%= k %>"><%= v %></option>
     <% end %>
@@ -39,15 +40,15 @@
     this.losses = losses;
     this.totalGames = this.wins + this.losses
     this.plusMinus = this.wins - this.losses;
-    this.winRatio = this.wins / (this.totalGames);
+    this.winRatio = this.wins / this.totalGames;
   }
   var Player = function(id, records) {
     this.id = id;
     this.records = records;
     this.versusArray = [];
+    this.wins = 0;
+    this.losses = 0;
     this.totalGames = 0;
-    this.totalWins = 0;
-    this.totalLosses = 0;
     var self = this;
     this.numGames = function() {
       return self.versusArray.length;
@@ -59,20 +60,21 @@
       $.each(self.records, function(i, idWinLossArr) {
         var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]);
         addVersus(vs);
-        self.totalWins += vs.wins;
-        self.totalLosses += vs.losses;
-        self.totalGames += (vs.wins + vs.losses);
+        self.wins += vs.wins;
+        self.losses += vs.losses;
       });
     }
     initializeVersus();
-    this.totalWins /= 2;
-    this.totalLosses /= 2;
-    this.totalGames /= 2;
-    this.winRatio = this.totalWins / this.totalGames;
+    // each game has 2 opponents
+    this.wins /= 2;
+    this.losses /= 2;
+    this.totalGames = this.wins + this.losses;
+    this.plusMinus = this.wins - this.losses;
+    this.winRatio = this.wins / this.totalGames;
   }
   var chart = {
     w: 500,
-    h: 900,
+    h: 1200,
     nameGap: 100,
     unitWidth: 20,
     barStart: function() { return this.nameGap },
@@ -97,25 +99,33 @@
     .attr('height', chart.h);
 
   $("#player-selector").change(function() {
-    drawComparisons(dataRecords[$(this).find(":selected").val()], $('#sort-type').val());
+    drawComparisons($(this).find(":selected").val(), $('#sort-type').val());
   }).val("1");
 
   $("#sort-type").change(function() {
-    drawComparisons(dataRecords[$("#player-selector").find(":selected").val()], $(this).val());
+    drawComparisons($("#player-selector").find(":selected").val(), $(this).val());
   });
 
-  drawComparisons(dataRecords['1'], "plusminus");
+  drawComparisons('all', "plusminus");
 
-  function drawComparisons(playerData, sortType) {
-    var dataPoints = transformData(playerData.versusArray, sortType);
+  function getPlayerData(playerId) {
+    if (isNaN(playerId)) {
+      return $.map(dataRecords, function (value, key) { return value; });;
+    } else {
+      return dataRecords[playerId].versusArray;
+    }
+  }
+
+  function drawComparisons(playerId, sortType) {
+    var dataPoints = transformData(getPlayerData(playerId), sortType);
     drawBars(dataPoints, sortType);
     drawNamesLabel(dataPoints);
     drawPlusMinusLabel(dataPoints, sortType);
     drawAgainstLabel(dataPoints, sortType);
   }
 
-  function transformData(versusArray, sortType) {
-    var data = versusArray.sort(function(vsPlayerA, vsPlayerB) {
+  function transformData(data, sortType) {
+    var data = data.sort(function(vsPlayerA, vsPlayerB) {
       switch(sortType) {
         case "plusminus":
           return d3.descending(vsPlayerA.plusMinus, vsPlayerB.plusMinus);
