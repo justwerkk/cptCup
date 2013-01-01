@@ -45,16 +45,30 @@
     this.id = id;
     this.records = records;
     this.versusArray = [];
+    this.totalGames = 0;
+    this.totalWins = 0;
+    this.totalLosses = 0;
     var self = this;
+    this.numGames = function() {
+      return self.versusArray.length;
+    }
     var addVersus = function(vsPlayer) {
       self.versusArray.push(vsPlayer);
     }
     var initializeVersus = function() {
       $.each(self.records, function(i, idWinLossArr) {
-        addVersus(new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]));
+        var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]);
+        addVersus(vs);
+        self.totalWins += vs.wins;
+        self.totalLosses += vs.losses;
+        self.totalGames += (vs.wins + vs.losses);
       });
     }
     initializeVersus();
+    this.totalWins /= 2;
+    this.totalLosses /= 2;
+    this.totalGames /= 2;
+    this.winRatio = this.totalWins / this.totalGames;
   }
   var chart = {
     w: 500,
