@@ -1,13 +1,11 @@
 class HomeController < ApplicationController
-  before_filter :calculate_data, :only => [:comparisons, :comparisons2, :comparisons3]
+  before_filter :calculate_data, :only => [:comparisons, :comparisons2, :comparisons3, :index]
   def index
     @player = Player.new
     @players = Player.all
     @game = Game.new
     @game.build_default_assocations
     @num_games = Game.count
-
-    @players_hash = Game.calculate_rankings(Game.all)
   end
 
   private

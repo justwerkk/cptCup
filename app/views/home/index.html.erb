@@ -8,6 +8,11 @@
   ul li {
     position: relative;
   }
+  #leader-board {
+    position: absolute;
+    left: 300px;
+    top: 4em;
+  }
   .experimental {
     position: relative;
     float:right;
@@ -31,26 +36,20 @@
   <ul>
     <li>
       <sup>New</sup>
-      <a href="<%= comparisons_path %>">W-L Records</a>
-    <li>
-      <sup>New</sup>
       <a href="<%= odds_games_path %>">Odds Calculator</a>
   </ul>
 </div>
 
 <h1>Canuto Tacderan Cup</h1>
-
-<%= image_tag "canuto.jpeg", :style => "height:400px;margin-left:300px;position:absolute;" %>
 <%= render 'games/form' %>
 
-<h4>Leaderboard</h4>
-<ul>
-  <% @players_hash.sort_by {|k,v| v}.reverse.each do |k,v| %>
-    <li><%= "#{k}: #{v}" %>
-  <% end %>
-</ul>
 <p>Total Number of Games Recorded: <%= @num_games %></p>
 
 <a href="<%= games_path %>">List all games</a>
 
 <%= render 'players/form' %>
+
+<div id="leader-board">
+  <h4>Leaderboard</h4>
+  <%= render 'comparisons' %>
+</div>
