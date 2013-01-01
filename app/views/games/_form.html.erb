@@ -1,3 +1,4 @@
+<% player_names = @players.sort_by(&:name).collect {|p| [ p.name, p.id ]} %>
 <%= form_for(@game) do |f| %>
   <% if @game.errors.any? %>
     <div id="error_explanation">
@@ -13,19 +14,19 @@
 
   <div class="field">
     <%= f.label :winner_one %><br />
-    <%= f.select :winner_one_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :winner_one_id,  player_names %>
   </div>
   <div class="field">
     <%= f.label :winner_two %><br />
-    <%= f.select :winner_two_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :winner_two_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :loser_one %><br />
-    <%= f.select :loser_one_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :loser_one_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :loser_two %><br />
-    <%= f.select :loser_two_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :loser_two_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :cups_left %><br />
