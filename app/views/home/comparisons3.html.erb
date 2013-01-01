@@ -232,12 +232,12 @@
 
   function drawNamesLabel(data) {
     var label = svg.selectAll('.player-names')
-      .data(data)
+      .data(data);
     label.enter().append("text");
     label.transition().duration(1000)
       .attr('class', 'player-names')
       .attr('x', function(d) { return chart.barStart() - chart.em(1); })
-      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
+      .attr('y', textYCoord)
       .attr("text-anchor", "end")
       .text(function(d) { return namesHash[d.id]; });
     label.exit().remove();
@@ -250,8 +250,8 @@
     label.transition().duration(1000)
       .attr('class', 'plus-minus')
       .attr('x', function(d) { return chart.barStart() + 5; })
-      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
       .attr('fill', function(d) { return sortType == "ranking" ? "#000" : "#fff"; })
+      .attr('y', textYCoord)
       .text(function(d) {
         switch(sortType) {
           case "ranking":
@@ -278,7 +278,7 @@
     label.transition().duration(1000)
       .attr('class', 'against-label')
       .attr('x', function(d) { return chart.barStart() + barWidth(d, sortType) * chart.unitWidth + 5; })
-      .attr('y', function(d, i) { return (i * chart.unitWidth) + chart.em(1); })
+      .attr('y', textYCoord)
       .text(function(d) {
         switch(sortType) {
           case "ranking":
@@ -311,6 +311,10 @@
       case "domination":
       case "pwned":
     }   return 5;
+  }
+
+  function textYCoord(d, i) {
+    return (i * chart.unitWidth) + chart.em(1);
   }
 </script>
 <% end %>
