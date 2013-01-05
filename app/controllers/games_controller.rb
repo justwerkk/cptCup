@@ -1,8 +1,10 @@
 class GamesController < ApplicationController
+  before_filter :set_league
+
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all
+    @games = @league.games
 
     respond_to do |format|
       format.html # index.html.erb
@@ -43,11 +45,11 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = Game.new(params[:game])
+    @game = @league.games.build(params[:game])
 
     respond_to do |format|
       if @game.save
-        format.html { redirect_to root_path, notice: 'Game was successfully created.' }
+        format.html { redirect_to league_path(@league), notice: 'Game was successfully created.' }
         format.json { render json: @game, status: :created, location: @game }
       else
         @players = Player.all
@@ -94,4 +96,11 @@ class GamesController < ApplicationController
       format.html {  }
     end
   end
+
+  private
+
+  def set_league
+    @league = League.find(params[:league_id])
+  end
+
 end

@@ -3,14 +3,15 @@ class Game < ActiveRecord::Base
   belongs_to :winner_two, class_name: "Player", foreign_key: "winner_two_id"
   belongs_to :loser_one, class_name: "Player", foreign_key: "loser_one_id"
   belongs_to :loser_two, class_name: "Player", foreign_key: "loser_two_id"
+  belongs_to :league
 
   attr_accessible :cups_left,
     :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id,
-    :winner_one, :winner_two, :loser_one, :loser_two
+    :winner_one, :winner_two, :loser_one, :loser_two, :league
 
   attr_reader :team_1_score, :team_2_score
 
-  validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id
+  validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id, :league_id
   validate :not_same_player
 
   def expected_outcome

@@ -2,6 +2,7 @@
 
 <table>
   <tr>
+    <th>League
     <th>Winner one
     <th>Winner two
     <th>Loser one
@@ -14,18 +15,19 @@
 
 <% @games.each do |game| %>
   <tr>
+    <td><%= @league.name %>
     <td><%= game.winner_one.name %>
     <td><%= game.winner_two.name %>
     <td><%= game.loser_one.name %>
     <td><%= game.loser_two.name %>
     <td><%= game.cups_left %>
     <td><%= game.created_at.strftime("%Y-%m-%d") %>
-    <td><%= link_to 'Show', game %>
-    <td><%= link_to 'Edit', edit_game_path(game) %>
-    <td><%= button_to 'Destroy', game_path(game), method: :delete, data: { confirm: 'Are you sure?' } %>
+    <td><%= link_to 'Show', league_game_path(@league, game) %>
+    <td><%= link_to 'Edit', edit_league_game_path(@league, game) %>
+    <td><%= button_to 'Destroy', league_game_path(@league, game), method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 </table>
 
 <br>
 
-<%= link_to 'New Game', new_game_path %>
+<%= link_to 'New Game', new_league_game_path %>
