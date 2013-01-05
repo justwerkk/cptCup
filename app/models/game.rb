@@ -18,8 +18,8 @@ class Game < ActiveRecord::Base
 
     players_score = Game.calculate_rankings(Game.all)
 
-    @team_1_score = players_score[winner_one.name] + players_score[winner_two.name]
-    @team_2_score = players_score[loser_one.name] + players_score[loser_two.name]
+    @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
+    @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
 
     team_1_expected = 1 / ( 1 + 10 ** ((team_2_score - team_1_score)/400))
     team_2_expected = 1 / ( 1 + 10 ** ((team_1_score - team_2_score)/400))
