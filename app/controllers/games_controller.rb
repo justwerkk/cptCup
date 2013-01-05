@@ -26,7 +26,7 @@ class GamesController < ApplicationController
   # GET /games/new
   # GET /games/new.json
   def new
-    @game = Game.new
+    @game = @league.games.build
     @game.build_default_assocations
     @players = Player.all
 
@@ -66,7 +66,7 @@ class GamesController < ApplicationController
 
     respond_to do |format|
       if @game.update_attributes(params[:game])
-        format.html { redirect_to @game, notice: 'Game was successfully updated.' }
+        format.html { redirect_to league_game_path(@league, @game), notice: 'Game was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -82,7 +82,7 @@ class GamesController < ApplicationController
     @game.destroy
 
     respond_to do |format|
-      format.html { redirect_to games_url }
+      format.html { redirect_to league_games_url }
       format.json { head :no_content }
     end
   end
