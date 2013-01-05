@@ -6,7 +6,7 @@ class CreateLeagues < ActiveRecord::Migration
       t.date :end_date, nil: true
     end
 
-    add_column :games, :league_id, :string, required: true
+    add_column :games, :league_id, :integer, required: true
   end
 
   def down
