@@ -23,19 +23,19 @@ Team 2 has a total score of <%= @game.total_loser_score %>, and a <%= number_to_
 
   <div class="field">
     <%= f.label :winner_one, "Team 1 Player 1" %><br />
-    <%= f.select :winner_one_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :winner_one_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :winner_two, "Team 1 Player 2" %><br />
-    <%= f.select :winner_two_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :winner_two_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :loser_one, "Team 2 Player 1" %><br />
-    <%= f.select :loser_one_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :loser_one_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :loser_two, "Team 2 Player 2" %><br />
-    <%= f.select :loser_two_id, @players.collect {|p| [ p.name, p.id ]} %>
+    <%= f.select :loser_two_id, player_names %>
   </div>
   <div class="actions">
     <%= f.submit "Calculate Odds" %>
