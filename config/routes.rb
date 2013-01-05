@@ -11,5 +11,5 @@ CptCup::Application.routes.draw do
   match 'comparisons2' => 'home#comparisons2', :as => :comparisons2
   match 'comparisons3' => 'home#comparisons3', :as => :comparisons3
 
-  root :to => "home#index"
+ root :to => "leagues#index"
 end

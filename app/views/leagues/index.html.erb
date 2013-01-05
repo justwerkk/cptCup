@@ -32,25 +32,14 @@
 </style>
 <% end %>
 
-<div class="experimental">
-  <ul>
-    <li>
-      <sup>New</sup>
-      <a href="<%= odds_league_games_path(@league) %>">Odds Calculator</a>
-  </ul>
-</div>
+<h1>Canuto Tacderan Cup</h1>
 
-<h1><%= @league.name %></h1>
+<h4>Select A League</h4>
+<ul>
+<% @leagues.each do |league| %>
+<li><%= link_to league.name, league_path(league) %> (started on <%= league.start_date.strftime("%Y-%m-%d") %> | <%= pluralize(league.games.count, "game") %> played )</li>
+<% end %>
+</ul>
 
-<h4>Record a Game</h4>
-<%= render 'games/form' %>
-
-<h4>View Games</h4>
-<p>Total Number of Games Recorded: <%= @num_games %></p>
-
-<a href="<%= league_games_path(@league) %>">List all games</a>
-
-<div id="leader-board">
-  <h4>Leaderboard</h4>
-  <%= render 'home/comparisons' %>
-</div>
+<h4>Create an Athlete</h4>
+<%= render 'players/form' %>

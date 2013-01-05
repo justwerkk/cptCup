@@ -1,10 +1,14 @@
 class LeaguesController < ApplicationController
   before_filter :set_league, :calculate_data, :only => [:show]
 
+  def index
+    @leagues = League.order('start_date DESC')
+    @player = Player.new
+  end
+
   # GET /leagues/1
   # GET /leagues/1.json
   def show
-    @player = Player.new
     @players = Player.all
     @game = @league.games.build
     @game.build_default_assocations
