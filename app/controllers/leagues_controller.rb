@@ -27,12 +27,9 @@ class LeaguesController < ApplicationController
 
   def calculate_data
     game_hash = {}
-    @league.games.each do |g|
-      game_hash[g.winner_one_id] = PlayerComparison.new unless game_hash[g.winner_one_id]
-      game_hash[g.winner_two_id] = PlayerComparison.new unless game_hash[g.winner_two_id]
-      game_hash[g.loser_one_id] = PlayerComparison.new unless game_hash[g.loser_one_id]
-      game_hash[g.loser_two_id] = PlayerComparison.new unless game_hash[g.loser_two_id]
+    Player.all.each {|player| game_hash[player.id] = PlayerComparison.new }
 
+    @league.games.each do |g|
       game_hash[g.winner_one_id].add_wins_against(g.loser_one_id, g.loser_two_id)
       game_hash[g.winner_two_id].add_wins_against(g.loser_one_id, g.loser_two_id)
       game_hash[g.loser_one_id].add_loses_against(g.winner_one_id, g.winner_two_id)
