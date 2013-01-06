@@ -88,7 +88,7 @@ class GamesController < ApplicationController
   end
 
   def odds
-    @game = Game.new(params[:game])
+    @game = @league.games.build(params[:game])
     @players = Player.all
 
     respond_to do |format|

@@ -8,7 +8,7 @@ Team 2 has a total score of <%= @game.total_loser_score %>, and a <%= number_to_
 <hr />
 <% end %>
 
-<%= form_for @game, :url => odds_games_path(@game), :method => :get do |f| %>
+<%= form_for @game, :url => odds_league_games_path(@league, @game), :method => :get do |f| %>
   <% if @game.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@game.errors.count, "error") %> prohibited this game from being saved:</h2>

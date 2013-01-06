@@ -17,7 +17,7 @@ class Game < ActiveRecord::Base
   def expected_outcome
     return false unless winner_one && winner_two && loser_one && loser_two
 
-    players_score = Game.calculate_rankings(Game.all)
+    players_score = Game.calculate_rankings(league.games)
 
     @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
     @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
@@ -30,7 +30,7 @@ class Game < ActiveRecord::Base
 
   def total_winner_score
     unless @team_1_score
-      players_score = Game.calculate_rankings(Game.all)
+      players_score = Game.calculate_rankings(league.games)
 
       @team_1_score = players_score[winner_one.name] + players_score[winner_two.name]
     end
@@ -40,7 +40,7 @@ class Game < ActiveRecord::Base
 
   def total_loser_score
     unless@team_2_score
-      players_score = Game.calculate_rankings(Game.all)
+      players_score = Game.calculate_rankings(league.games)
 
       @team_2_score = players_score[loser_one.name] + players_score[loser_two.name]
     end
