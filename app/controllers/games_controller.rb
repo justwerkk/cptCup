@@ -4,7 +4,7 @@ class GamesController < ApplicationController
   # GET /games
   # GET /games.json
   def index
-    @games = @league.games.order("created_at DESC")
+    @games = @league.games.unscoped.order("created_at DESC")
 
     respond_to do |format|
       format.html # index.html.erb
