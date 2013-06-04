@@ -37,7 +37,8 @@ class LeaguesController < ApplicationController
     end
     @game_hash = {}
     game_hash.to_a.each {|arr| @game_hash[arr.first] = arr.last.against_hash.to_a}
-    @players_hash = Player.all.inject({}) {|hash, p| hash[p.id] = p.name; hash}
-    @player_rankings = Game.calculate_rankings(@league.games)
+    @players_hash = Player.all.inject({}) {|hash, p| hash[p.id] = p.name; hash}.select {|player_id| @game_hash[player_id].present? }
+    @game_hash.reject! {|player_id, games_arr| games_arr.empty? }
+    @player_rankings = Game.calculate_rankings(@league.games, @players_hash.keys)
   end
 end

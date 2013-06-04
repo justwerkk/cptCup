@@ -49,9 +49,13 @@ class Game < ActiveRecord::Base
   end
 
   def self.calculate_rankings(games)
-    players_score = Player.all.inject({}) do |hash, p|
-      if hash[p.id].blank?
-        hash[p.id] = 1200
+    calculate_rankings(games, Player.select("id").all)
+  end
+
+  def self.calculate_rankings(games, player_ids)
+    players_score = player_ids.inject({}) do |hash, p_id|
+      if hash[p_id].blank?
+        hash[p_id] = 1200
       end
       hash
     end
