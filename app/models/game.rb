@@ -18,35 +18,35 @@ class Game < ActiveRecord::Base
   ELO_K_FACTOR = 16
   ELO_MULTIPLIER = 400.0
 
-  def expected_outcome
+  def expected_outcome(starting_score = ELO_STARTING_SCORE, k_factor = ELO_K_FACTOR, multiplier = ELO_MULTIPLIER)
     return false unless winner_one && winner_two && loser_one && loser_two
 
-    players_score = Game.calculate_rankings(league.games)
+    players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
     @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
     @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
 
-    team_1_expected = 1 / ( 1 + 10 ** ((team_2_score - team_1_score)/400))
-    team_2_expected = 1 / ( 1 + 10 ** ((team_1_score - team_2_score)/400))
+    team_1_expected = 1 / ( 1 + 10 ** ((team_2_score - team_1_score)/multiplier))
+    team_2_expected = 1 / ( 1 + 10 ** ((team_1_score - team_2_score)/multiplier))
 
     return team_1_expected, team_2_expected
   end
 
-  def total_winner_score
+  def total_winner_score(starting_score = ELO_STARTING_SCORE, k_factor = ELO_K_FACTOR, multiplier = ELO_MULTIPLIER)
     unless @team_1_score
-      players_score = Game.calculate_rankings(league.games)
+      players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
-      @team_1_score = players_score[winner_one.name] + players_score[winner_two.name]
+      @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
     end
 
     @team_1_score
   end
 
-  def total_loser_score
+  def total_loser_score(starting_score = ELO_STARTING_SCORE, k_factor = ELO_K_FACTOR, multiplier = ELO_MULTIPLIER)
     unless@team_2_score
-      players_score = Game.calculate_rankings(league.games)
+      players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
-      @team_2_score = players_score[loser_one.name] + players_score[loser_two.name]
+      @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
     end
 
     @team_2_score

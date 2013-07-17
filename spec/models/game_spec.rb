@@ -100,4 +100,34 @@ describe Game do
       (p3_score_gained - p1_score_gained).should > 0
     end
   end
+
+  context "when given a new game" do
+    before(:each) do
+      @league = create(:league)
+      create(:game, winner_one: @p1, winner_two: @p3, loser_one: @p2, loser_two: @p4, league: @league)
+      create(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4, league: @league)
+      create(:game, winner_one: @p3, winner_two: @p4, loser_one: @p2, loser_two: @p1, league: @league)
+      create(:game, winner_one: @p1, winner_two: @p4, loser_one: @p2, loser_two: @p3, league: @league)
+    end
+
+    it "calculates expected outcome" do
+      match_up = build(:game, winner_one: @p1, winner_two: @p4, loser_one: @p2, loser_two: @p3, league: @league)
+      team_1, team_2 = match_up.expected_outcome(@starting_score, @k_factor, @multiplier)
+      team_1.should be_within(0.0001).of(0.5459)
+      team_2.should be_within(0.0001).of(0.4540)
+    end
+
+    it "calculates total winner score" do
+      match_up = build(:game, winner_one: @p1, winner_two: @p4, loser_one: @p2, loser_two: @p3, league: @league)
+      winner_score = match_up.total_winner_score(@starting_score, @k_factor, @multiplier)
+      winner_score.should be_within(0.01).of(2416.0)
+    end
+
+    it "calculates total loser score" do
+      match_up = build(:game, winner_one: @p1, winner_two: @p4, loser_one: @p2, loser_two: @p3, league: @league)
+      loser_score = match_up.total_loser_score(@starting_score, @k_factor, @multiplier)
+      loser_score.should be_within(0.01).of(2384.0)
+    end
+  end
+
 end
