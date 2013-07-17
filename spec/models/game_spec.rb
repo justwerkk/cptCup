@@ -55,10 +55,10 @@ describe Game do
 
     it "is zero sum" do
       games = []
-      games << build(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4)
-      games << build(:game, winner_one: @p1, winner_two: @p3, loser_one: @p2, loser_two: @p4)
-      games << build(:game, winner_one: @p3, winner_two: @p4, loser_one: @p2, loser_two: @p1)
-      games << build(:game, winner_one: @p1, winner_two: @p4, loser_one: @p2, loser_two: @p3)
+      15.times do
+	players = [@p1, @p2, @p3, @p4].shuffle
+	games << build(:game, winner_one: players.pop, winner_two: players.pop, loser_one: players.pop, loser_two: players.pop)
+      end
 
       rankings = Game.calculate_rankings(games, @starting_score, @k_factor, @multiplier)
       rankings.values.reduce(:+).should be_within(0.001).of(@starting_score*4)
