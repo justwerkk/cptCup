@@ -14,6 +14,10 @@ class Game < ActiveRecord::Base
   validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id, :league_id
   validate :not_same_player
 
+  ELO_STARTING_SCORE = 1200
+  ELO_K_FACTOR = 16
+  ELO_MULTIPLIER = 400.0
+
   def expected_outcome
     return false unless winner_one && winner_two && loser_one && loser_two
 
@@ -48,24 +52,20 @@ class Game < ActiveRecord::Base
     @team_2_score
   end
 
-  def self.calculate_rankings(games, player_ids)
-    players_score = player_ids.inject({}) do |hash, p_id|
-      if hash[p_id].blank?
-	hash[p_id] = 1200
-      end
-      hash
-    end
+  def self.calculate_rankings(games, starting_score = ELO_STARTING_SCORE, k_factor = ELO_K_FACTOR, multiplier = ELO_MULTIPLIER)
+    players_score = Hash.new {|h, k| h[k] = starting_score}
 
     games.each do |g|
-      winner_one_score = players_score[g.winner_one.id]
-      winner_two_score = players_score[g.winner_two.id]
-      loser_one_score = players_score[g.loser_one.id]
-      loser_two_score = players_score[g.loser_two.id]
-      players_score[g.winner_one.id] += 16*(1-1/(1.0+10**(((loser_one_score + loser_two_score)-(winner_one_score + winner_two_score))/400.0)))
-      players_score[g.winner_two.id] += 16*(1-1/(1.0+10**(((loser_one_score + loser_two_score)-(winner_one_score + winner_two_score))/400.0)))
-      players_score[g.loser_one.id] += 16*(0-1/(1.0+10**(((winner_one_score + winner_two_score)-(loser_one_score + loser_two_score))/400.0)))
-      players_score[g.loser_two.id] += 16*(0-1/(1.0+10**(((winner_one_score + winner_two_score)-(loser_one_score + loser_two_score))/400.0)))
+      winning_team_score = players_score[g.winner_one.id] + players_score[g.winner_two.id]
+      losing_team_score = players_score[g.loser_one.id] + players_score[g.loser_two.id]
+      winner_points = k_factor*(1-1/(1.0+10**((losing_team_score-winning_team_score)/multiplier)))
+
+      players_score[g.winner_one.id] += winner_points
+      players_score[g.winner_two.id] += winner_points
+      players_score[g.loser_one.id] -= winner_points
+      players_score[g.loser_two.id] -= winner_points
     end
+
     players_score
   end
 

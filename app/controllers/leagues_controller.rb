@@ -26,6 +26,7 @@ class LeaguesController < ApplicationController
   end
 
   def calculate_data
+    #refactor this into models, theres prolly a better way to structure this...
     game_hash = {}
     Player.all.each {|player| game_hash[player.id] = PlayerComparison.new }
 
@@ -37,8 +38,15 @@ class LeaguesController < ApplicationController
     end
     @game_hash = {}
     game_hash.to_a.each {|arr| @game_hash[arr.first] = arr.last.against_hash.to_a}
-    @players_hash = Player.all.inject({}) {|hash, p| hash[p.id] = p.name; hash}.select {|player_id| @game_hash[player_id].present? }
+
+    #refactor this to a call to the League for players
+    @players_hash = Player.all.inject({}) do |hash, p|
+      hash[p.id] = p.name; hash
+    end.select {|player_id| @game_hash[player_id].present?}
+
     @game_hash.reject! {|player_id, games_arr| games_arr.empty? }
-    @player_rankings = Game.calculate_rankings(@league.games, @players_hash.keys)
+
+    #refactor this, move it to League, doesnt need any params...
+    @player_rankings = Game.calculate_rankings(@league.games)
   end
 end
