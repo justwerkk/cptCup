@@ -21,3 +21,5 @@ gem 'jquery-rails'
 group :development do
   gem 'heroku'
 end
+
+gem "rspec-rails", '~> 2.0', :group => [:development, :test]
