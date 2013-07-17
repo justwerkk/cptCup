@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 20130105061341) do
     t.integer  "cups_left"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
-    t.string   "league_id"
+    t.integer  "league_id"
   end
 
   create_table "leagues", :force => true do |t|
