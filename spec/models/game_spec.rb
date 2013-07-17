@@ -99,9 +99,5 @@ describe Game do
 
       (p3_score_gained - p1_score_gained).should > 0
     end
-
-    pending "it calculates the total winner score"
-    pending "it calculates the total loser score"
-    pending "it calculates rankings"
   end
 end
