@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe Game do
-  before(:each) do
+  before(:all) do
     @p1 = create(:player)
     @p2 = create(:player)
     @p3 = create(:player)
     @p4 = create(:player)
+  end
+
+  after(:all) do
+    Player.delete_all
   end
 
   it "has a valid factory" do
@@ -30,7 +34,7 @@ describe Game do
     g.should have(1).error_on(:base)
   end
 
-  context "when calculating scores for a list of games" do
+  context "when given a list of games" do
     it "calculates players scores" do
       games = []
       games << build(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4)
@@ -46,7 +50,18 @@ describe Game do
     end
 
     it "rewards scores in a logarithmic curve" do
+      games = []
+      p1_scores = [Game.calculate_rankings(games, 1200, 16, 400.0)[@p1.id]]
 
+      20.times do
+	games << build(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4)
+	p1_scores << Game.calculate_rankings(games, 1200, 16, 400.0)[@p1.id]
+      end
+
+      p1_score_diffs = []
+      (0...p1_scores.length-1).each {|i| p1_score_diffs[i] = p1_scores[i+1] - p1_scores[i]}
+
+      p1_score_diffs.should == p1_score_diffs.sort.reverse
     end
 
     it "rewards underdogs more than the favorites"
