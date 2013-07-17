@@ -2,7 +2,7 @@ class LeaguesController < ApplicationController
   before_filter :set_league, :calculate_data, :only => [:show]
 
   def index
-    @leagues = League.by_start_date
+    @leagues = League.all
     @player = Player.new
   end
 

@@ -5,6 +5,8 @@ class Game < ActiveRecord::Base
   belongs_to :loser_two, class_name: "Player", foreign_key: "loser_two_id"
   belongs_to :league
 
+  default_scope order: "created_at ASC"
+
   attr_accessible :cups_left,
     :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id,
     :winner_one, :winner_two, :loser_one, :loser_two, :league
