@@ -12,17 +12,6 @@ class Admin::LeaguesController < ApplicationController
     end
   end
 
-  # GET /admin/leagues/1
-  # GET /admin/leagues/1.json
-  def show
-    @league = League.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @league }
-    end
-  end
-
   # GET /admin/leagues/new
   # GET /admin/leagues/new.json
   def new
@@ -62,7 +51,7 @@ class Admin::LeaguesController < ApplicationController
 
     respond_to do |format|
       if @league.update_attributes(params[:league])
-        format.html { redirect_to @league, notice: 'League was successfully updated.' }
+        format.html { redirect_to admin_leagues_path, notice: 'League was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

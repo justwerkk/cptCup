@@ -51,14 +51,6 @@ describe Admin::LeaguesController do
       end
     end
 
-    describe "GET show" do
-      it "assigns the requested league as @league" do
-        league = League.create! valid_attributes
-        get :show, {:id => league.to_param}, valid_session
-        assigns(:league).should eq(league)
-      end
-    end
-
     describe "GET new" do
       it "assigns a new league as @league" do
         get :new, {}, valid_session
@@ -132,7 +124,7 @@ describe Admin::LeaguesController do
         it "redirects to the league" do
           league = League.create! valid_attributes
           put :update, {:id => league.to_param, :league => valid_attributes}, valid_session
-          response.should redirect_to(league)
+          response.should redirect_to(admin_leagues_path)
         end
       end
 
