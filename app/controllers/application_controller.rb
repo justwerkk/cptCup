@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  protected
+
   def authenticate
-    request_http_basic_authentication unless authenticate_with_http_basic { |u, p| u == "cpt" && p = "cup" }
+    authenticate_or_request_with_http_basic do |username, password|
+      username == "cpt" && password == "cup"
+    end
   end
 end
