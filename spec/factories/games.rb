@@ -6,5 +6,6 @@ FactoryGirl.define do
     association :loser_two, factory: :player
     cups_left 1
     association :league
+    sequence(:created_at) { |n| Date.new(2012, 1, 1) + n }
   end
 end
