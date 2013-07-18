@@ -1,0 +1,21 @@
+<h1>Listing admin_leagues</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @admin_leagues.each do |admin_league| %>
+  <tr>
+    <td><%= link_to 'Show', admin_league %></td>
+    <td><%= link_to 'Edit', edit_admin_league_path(admin_league) %></td>
+    <td><%= link_to 'Destroy', admin_league, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New League', new_admin_league_path %>

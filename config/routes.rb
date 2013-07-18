@@ -7,5 +7,9 @@ CptCup::Application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :leagues
+  end
+
  root :to => "leagues#index"
 end

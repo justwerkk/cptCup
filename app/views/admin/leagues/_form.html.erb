@@ -1,0 +1,17 @@
+<%= form_for(@admin_league) do |f| %>
+  <% if @admin_league.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@admin_league.errors.count, "error") %> prohibited this admin_league from being saved:</h2>
+
+      <ul>
+      <% @admin_league.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
