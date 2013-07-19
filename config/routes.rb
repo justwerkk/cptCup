@@ -11,5 +11,6 @@ CptCup::Application.routes.draw do
     resources :leagues, except: :show
   end
 
- root :to => "leagues#index"
+  get '/admin' => "admin/leagues#index"
+  root :to => "leagues#index"
 end
