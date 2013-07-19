@@ -16,8 +16,8 @@
   <tr>
     <td><%= league.id %></td>
     <td><%= league.name %></td>
-    <td><%= league.start_date ? league.start_date.to_formatted_s : "none" %></td>
-    <td><%= league.end_date ? league.end_date.to_formatted_s : "none" %></td>
+    <td><%= league.start_date.to_formatted_s if league.start_date %></td>
+    <td><%= league.end_date.to_formatted_s if league.end_date %></td>
     <td><%= link_to 'Edit', edit_admin_league_path(league) %></td>
     <td><%= link_to 'Destroy', [:admin, league], method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
