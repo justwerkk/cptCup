@@ -78,11 +78,12 @@ describe Admin::LeaguesController do
           post :create, {:league => valid_attributes}, valid_session
           assigns(:league).should be_a(League)
           assigns(:league).should be_persisted
+          assigns(:league).name.should_not be_nil
         end
 
         it "redirects to the created league" do
           post :create, {:league => valid_attributes}, valid_session
-          response.should redirect_to(League.last)
+          response.should redirect_to(admin_leagues_path)
         end
       end
 

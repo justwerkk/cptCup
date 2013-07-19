@@ -31,11 +31,11 @@ class Admin::LeaguesController < ApplicationController
   # POST /admin/leagues
   # POST /admin/leagues.json
   def create
-    @league = League.new(params[:admin_league])
+    @league = League.new(params[:league])
 
     respond_to do |format|
       if @league.save
-        format.html { redirect_to @league, notice: 'League was successfully created.' }
+        format.html { redirect_to admin_leagues_path, notice: 'League was successfully created.' }
         format.json { render json: @league, status: :created, location: @league }
       else
         format.html { render action: "new" }
