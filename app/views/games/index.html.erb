@@ -10,8 +10,6 @@
     <th>Cups left
     <th>Date</th>
     <th>
-    <th>
-    <th>
 
 <% @games.each do |game| %>
   <tr>
@@ -22,9 +20,7 @@
     <td><%= game.loser_two.name %>
     <td><%= game.cups_left %>
     <td><%= game.created_at.strftime("%Y-%m-%d") %>
-    <td><%= link_to 'Show', league_game_path(@league, game) %>
     <td><%= link_to 'Edit', edit_league_game_path(@league, game) %>
-    <td><%= button_to 'Destroy', league_game_path(@league, game), method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 </table>
 
