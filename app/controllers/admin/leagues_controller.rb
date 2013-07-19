@@ -1,5 +1,6 @@
 class Admin::LeaguesController < ApplicationController
   before_filter :authenticate
+  layout 'admin'
 
   # GET /admin/leagues
   # GET /admin/leagues.json

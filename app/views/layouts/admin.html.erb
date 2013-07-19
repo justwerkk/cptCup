@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canute Tacderan Cup / Admin</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= yield :head %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <header>Canute Tacderan Cup / Admin</header>
+    <h1>
+    <nav>
+      <ul>
+        <li><%= link_to_unless_current "Leagues", admin_leagues_path %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <%= yield %>
+</body>
+</html>
