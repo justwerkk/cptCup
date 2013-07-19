@@ -2,7 +2,7 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.order("name ASC")
+    @players = Player.order("LOWER(name) ASC")
 
     respond_to do |format|
       format.html # index.html.erb
