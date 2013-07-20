@@ -4,6 +4,6 @@ class Player < ActiveRecord::Base
   validates_presence_of :name
 
   has_many :games, dependent: :restrict, :finder_sql =>
-    Proc.new {"SELECT * FROM games INNER JOIN players ON games.winner_one_id = #{id} OR games.winner_two_id = #{id} OR games.loser_one_id = #{id} OR games.loser_two_id = #{id}"}
+    Proc.new {"SELECT * FROM games INNER JOIN players ON games.player_one_id = #{id} OR games.player_two_id = #{id} OR games.player_three_id = #{id} OR games.player_four_id = #{id}"}
 
 end

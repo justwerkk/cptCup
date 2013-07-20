@@ -4,7 +4,7 @@ describe Player do
   let(:player){ create(:player) }
 
   it "cant be destroyed if it has played games" do
-    create(:game, winner_one: player)
+    create(:game, player_one: player)
 
     expect {player.destroy}.to raise_exception(ActiveRecord::DeleteRestrictionError)
   end
