@@ -33,12 +33,13 @@ describe LeaguesController do
       get :show, id: @league.id
     end
 
-    it "should build a new game" do
+    it "should build a new game with a team 1 victory" do
       assigns(:game).should be_new_record
       assigns(:game).player_one.should be_new_record
       assigns(:game).player_two.should be_new_record
       assigns(:game).player_three.should be_new_record
       assigns(:game).player_four.should be_new_record
+      assigns(:game).is_team_one_victory.should be_true
     end
 
     it "should assign the selected league" do

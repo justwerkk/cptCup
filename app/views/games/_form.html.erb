@@ -12,26 +12,27 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :winner_one %><br />
-    <%= f.select :winner_one_id,  player_names %>
+    <%= f.label :player_one_id, "Winner One" %><br />
+    <%= f.select :player_one_id,  player_names %>
   </div>
   <div class="field">
-    <%= f.label :winner_two %><br />
-    <%= f.select :winner_two_id, player_names %>
+    <%= f.label :player_two_id, "Winner Two" %><br />
+    <%= f.select :player_two_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_one %><br />
-    <%= f.select :loser_one_id, player_names %>
+    <%= f.label :player_three_id, "Loser One" %><br />
+    <%= f.select :player_three_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_two %><br />
-    <%= f.select :loser_two_id, player_names %>
+    <%= f.label :player_four_id, "Loser Two" %><br />
+    <%= f.select :player_four_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :cups_left %><br />
     <%= f.number_field :cups_left %>
   </div>
   <div class="actions">
+    <%= f.hidden_field :is_team_one_victory %>
     <%= f.submit "Add Game" %>
   </div>
 <% end %>
