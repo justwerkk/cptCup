@@ -31,7 +31,7 @@ describe Admin::GamesController do
   # This should return the minimal set of attributes required to create a valid
   # Admin::Game. As you add validations to Admin::Game, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { attributes_for(:game).except(:created_at).merge(winner_one_id: @p1.id, winner_two_id: @p2.id, loser_one_id: @p3.id, loser_two_id: @p4.id, league_id: @league.id) }
+  let(:valid_attributes) { attributes_for(:game).except(:created_at).merge(player_one_id: @p1.id, player_two_id: @p2.id, player_three_id: @p3.id, player_four_id: @p4.id, league_id: @league.id) }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in

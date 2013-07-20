@@ -7,10 +7,11 @@
 <table>
   <tr>
     <th>League</th>
-    <th>Winner 1</th>
-    <th>Winner 2</th>
-    <th>Loser 1</th>
-    <th>Loser 2</th>
+    <th>Player one</th>
+    <th>Player two</th>
+    <th>Player three</th>
+    <th>Player four</th>
+    <th>Winning team
     <th>Cups Left</th>
     <th>Date</th>
 
@@ -21,10 +22,11 @@
 <% @games.each do |game| %>
   <tr>
     <td><%= game.league.name %></td>
-    <td><%= game.winner_one.name %></td>
-    <td><%= game.winner_two.name %></td>
-    <td><%= game.loser_one.name %></td>
-    <td><%= game.loser_two.name %></td>
+    <td><%= game.player_one.name %></td>
+    <td><%= game.player_two.name %></td>
+    <td><%= game.player_three.name %></td>
+    <td><%= game.player_four.name %></td>
+    <td><%= winner_string(game) %></td>
     <td><%= game.cups_left %></td>
     <td><%= game.created_at.to_formatted_s %></td>
 

@@ -16,24 +16,28 @@
     <%= f.select :league_id, leagues %>
   </div>
   <div class="field">
-    <%= f.label :winner_one %><br />
-    <%= f.select :winner_one_id,  player_names %>
+    <%= f.label :player_one_id %><br />
+    <%= f.select :player_one_id,  player_names %>
   </div>
   <div class="field">
-    <%= f.label :winner_two %><br />
-    <%= f.select :winner_two_id, player_names %>
+    <%= f.label :player_two_id %><br />
+    <%= f.select :player_two_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_one %><br />
-    <%= f.select :loser_one_id, player_names %>
+    <%= f.label :player_three_id %><br />
+    <%= f.select :player_three_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_two %><br />
-    <%= f.select :loser_two_id, player_names %>
+    <%= f.label :player_four_id %><br />
+    <%= f.select :player_four_id, player_names %>
   </div>
   <div class="field">
     <%= f.label :cups_left %><br />
     <%= f.number_field :cups_left %>
+  </div>
+  <div class="field">
+    <%= f.label :is_team_one_victory, "Winner of game" %><br />
+    <%= f.select :is_team_one_victory, options_for_game_winner %>
   </div>
   <div class="actions">
     <%= f.submit %>
