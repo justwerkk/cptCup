@@ -1,0 +1,35 @@
+<h1>Listing games</h1>
+
+<p id="notice"><%= notice %></p>
+
+<%= link_to 'New Game', new_admin_game_path %>
+
+<table>
+  <tr>
+    <th>League</th>
+    <th>Winner 1</th>
+    <th>Winner 2</th>
+    <th>Loser 1</th>
+    <th>Loser 2</th>
+    <th>Cups Left</th>
+    <th>Date</th>
+
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @games.each do |game| %>
+  <tr>
+    <td><%= game.league.name %></td>
+    <td><%= game.winner_one.name %></td>
+    <td><%= game.winner_two.name %></td>
+    <td><%= game.loser_one.name %></td>
+    <td><%= game.loser_two.name %></td>
+    <td><%= game.cups_left %></td>
+    <td><%= game.created_at.to_formatted_s %></td>
+
+    <td><%= link_to 'Edit', edit_admin_game_path(game) %></td>
+    <td><%= link_to 'Destroy', admin_game_path(game), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>

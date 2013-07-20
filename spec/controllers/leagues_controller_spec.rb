@@ -28,17 +28,17 @@ describe LeaguesController do
       @p3 = create(:player)
       @p4 = create(:player)
 
-      10.times { create(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4, league: @league) }
+      10.times { create(:completed_game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4, league: @league) }
 
       get :show, id: @league.id
     end
 
     it "should build a new game" do
       assigns(:game).should be_new_record
-      assigns(:game).winner_one.should be_new_record
-      assigns(:game).winner_two.should be_new_record
-      assigns(:game).loser_one.should be_new_record
-      assigns(:game).loser_two.should be_new_record
+      assigns(:game).player_one.should be_new_record
+      assigns(:game).player_two.should be_new_record
+      assigns(:game).player_three.should be_new_record
+      assigns(:game).player_four.should be_new_record
     end
 
     it "should assign the selected league" do

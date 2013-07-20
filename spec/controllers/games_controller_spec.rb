@@ -8,7 +8,7 @@ describe GamesController do
     @p4 = create(:player)
 
     @league = create(:league)
-    10.times { create(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4, league: @league) }
+    10.times { create(:game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4, league: @league) }
   end
 
   let(:league) { create(:league) }
@@ -25,7 +25,7 @@ describe GamesController do
     end
 
     it "should exclude games from other leagues in games array" do
-      create(:game, winner_one: @p1, winner_two: @p2, loser_one: @p3, loser_two: @p4, league: league)
+      create(:game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4, league: league)
       get :index, league_id: @league.id
       assigns(:games).should have(10).items
     end
