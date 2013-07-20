@@ -1,17 +1,17 @@
 class Game < ActiveRecord::Base
-  belongs_to :winner_one, class_name: "Player", foreign_key: "winner_one_id"
-  belongs_to :winner_two, class_name: "Player", foreign_key: "winner_two_id"
-  belongs_to :loser_one, class_name: "Player", foreign_key: "loser_one_id"
-  belongs_to :loser_two, class_name: "Player", foreign_key: "loser_two_id"
+  belongs_to :player_one, class_name: "Player", foreign_key: "player_one_id"
+  belongs_to :player_two, class_name: "Player", foreign_key: "player_two_id"
+  belongs_to :player_three, class_name: "Player", foreign_key: "player_three_id"
+  belongs_to :player_four, class_name: "Player", foreign_key: "player_four_id"
   belongs_to :league
 
   attr_accessible :cups_left,
-    :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id, :league_id,
-    :winner_one, :winner_two, :loser_one, :loser_two, :league
+    :player_one_id, :player_two_id, :player_three_id, :player_four_id, :league_id,
+    :player_one, :player_two, :player_three, :player_four, :league, :is_team_one_victory
 
   attr_reader :team_1_score, :team_2_score
 
-  validates_presence_of :winner_one_id, :winner_two_id, :loser_one_id, :loser_two_id, :league_id
+  validates_presence_of :player_one_id, :player_two_id, :player_three_id, :player_four_id, :league_id
   validate :not_same_player
 
   ELO_STARTING_SCORE = 1200
@@ -19,12 +19,12 @@ class Game < ActiveRecord::Base
   ELO_MULTIPLIER = 400.0
 
   def expected_outcome(starting_score = ELO_STARTING_SCORE, k_factor = ELO_K_FACTOR, multiplier = ELO_MULTIPLIER)
-    return false unless winner_one && winner_two && loser_one && loser_two
+    return false unless player_one && player_two && player_three && player_four
 
     players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
-    @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
-    @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
+    @team_1_score = players_score[player_one.id] + players_score[player_two.id]
+    @team_2_score = players_score[player_three.id] + players_score[player_four.id]
 
     team_1_expected = 1 / ( 1 + 10 ** ((team_2_score - team_1_score)/multiplier))
     team_2_expected = 1 / ( 1 + 10 ** ((team_1_score - team_2_score)/multiplier))
@@ -36,7 +36,7 @@ class Game < ActiveRecord::Base
     unless @team_1_score
       players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
-      @team_1_score = players_score[winner_one.id] + players_score[winner_two.id]
+      @team_1_score = players_score[player_one.id] + players_score[player_two.id]
     end
 
     @team_1_score
@@ -46,7 +46,7 @@ class Game < ActiveRecord::Base
     unless@team_2_score
       players_score = Game.calculate_rankings(league.games, starting_score, k_factor, multiplier)
 
-      @team_2_score = players_score[loser_one.id] + players_score[loser_two.id]
+      @team_2_score = players_score[player_three.id] + players_score[player_four.id]
     end
 
     @team_2_score
@@ -56,30 +56,45 @@ class Game < ActiveRecord::Base
     players_score = Hash.new {|h, k| h[k] = starting_score}
 
     games.each do |g|
-      winning_team_score = players_score[g.winner_one.id] + players_score[g.winner_two.id]
-      losing_team_score = players_score[g.loser_one.id] + players_score[g.loser_two.id]
+      next if g.is_team_one_victory.nil? #ignore incomplete games
+
+      if g.is_team_one_victory
+        winner_one_id = g.player_one.id
+        winner_two_id = g.player_two.id
+        loser_one_id = g.player_three.id
+        loser_two_id = g.player_four.id
+      else
+        winner_one_id = g.player_three.id
+        winner_two_id = g.player_four.id
+        loser_one_id = g.player_one.id
+        loser_two_id = g.player_two.id
+      end
+
+      winning_team_score = players_score[winner_one_id] + players_score[winner_two_id]
+      losing_team_score = players_score[loser_one_id] + players_score[loser_two_id]
+
       winner_points = k_factor*(1-1/(1.0+10**((losing_team_score-winning_team_score)/multiplier)))
 
-      players_score[g.winner_one.id] += winner_points
-      players_score[g.winner_two.id] += winner_points
-      players_score[g.loser_one.id] -= winner_points
-      players_score[g.loser_two.id] -= winner_points
+      players_score[winner_one_id] += winner_points
+      players_score[winner_two_id] += winner_points
+      players_score[loser_one_id] -= winner_points
+      players_score[loser_two_id] -= winner_points
     end
 
     players_score
   end
 
   def build_default_assocations
-    self.build_winner_one unless self.winner_one
-    self.build_winner_two unless self.winner_two
-    self.build_loser_one unless self.loser_one
-    self.build_loser_two unless self.loser_two
+    self.build_player_one unless self.player_one
+    self.build_player_two unless self.player_two
+    self.build_player_three unless self.player_three
+    self.build_player_four unless self.player_four
   end
 
   private
 
   def not_same_player
-    if [self.winner_one_id, self.winner_two_id, self.loser_one_id, self.loser_two_id].uniq.size != 4
+    if [self.player_one_id, self.player_two_id, self.player_three_id, self.player_four_id].uniq.size != 4
       self.errors.add(:base, "Can't add the same player fool!")
     end
   end
