@@ -6,4 +6,5 @@ class Player < ActiveRecord::Base
   has_many :games, dependent: :restrict, :finder_sql =>
     Proc.new {"SELECT * FROM games INNER JOIN players ON games.player_one_id = #{id} OR games.player_two_id = #{id} OR games.player_three_id = #{id} OR games.player_four_id = #{id}"}
 
+  has_many :shots
 end
