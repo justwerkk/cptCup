@@ -1,15 +1,41 @@
 <% content_for :head do %>
 <style>
+  h1 { font-size: 50px; }
+
   div.game {
     text-align: center;
   }
+  div.team{
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+  }
+
+  div.player {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    background-color: green;
+    font-weight: bold;
+    -webkit-border-radius: 75px;
+    -moz-border-radius: 75px;
+  }
+
+  div.player.one {left: 0;top: 0;}
+  div.player.two {right: 0;top: 0;}
+  div.player.three {left: 0;bottom: 0;}
+  div.player.four {right: 0;bottom: 0;}
+
   div.rack {
-    margin-bottom: 50px;
+    margin: 0 auto 50px auto;
+    width: 600px;
   }
 
   div.row {
-    width: 100%;
+    width: 215px;
     text-align: center;
+    margin: 0 auto;
   }
 
   div.cup {
@@ -23,22 +49,62 @@
     font-weight: bold;
     color: #fff;
     display: inline-block;
+    box-sizing: border-box;
   }
+  div.hit:before {
+    content: "X";
+    font-size: 35px;
+  }
+  div.cup:hover {
+    background-color: #fff;
+    color: #000;
+    border: #000000 2px solid;
+  }
+
+  div.hit-or-miss {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background-color: #000;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+    z-index: 10000;
+    display: none;
+  }
+
+  div.hit-or-miss a{
+    display: inline-block;
+    margin: 25% 20px;
+    width: 200px;
+    height: 70px;
+    background-color: #fff;
+    text-decoration: none;
+    font-size: 50px;
+  }
+
+  div.hit-or-miss a:hover{
+    color: #000;
+    background-color: #ffe;
+  }
+
 </style>
 <% end %>
 
 <div class="game">
-<div class="team">
-  <h1>Team 1</h1>
-  <div class="player"><%= @game.player_one.name %></div>
-  <div class="player"><%= @game.player_two.name %></div>
-</div>
+  <div class="team">
+    <h1>Team 1</h1>
+    <div class="player one"><%= @game.player_one.name %></div>
+    <div class="player two"><%= @game.player_two.name %></div>
+  </div>
 
 <div class="rack">
   <div class="row">
-    <div class="cup">7</div>
+    <div class="cup hit">7</div>
     <div class="cup">8</div>
-    <div class="cup">9</div>
+    <div class="cup hit">9</div>
     <div class="cup">10</div>
   </div>
   <div class="row">
@@ -77,8 +143,15 @@
 </div>
 
 <div class="team">
-  <div class="player"><%= @game.player_three.name %></div>
-  <div class="player"><%= @game.player_four.name %></div>
+  <div class="player three"><%= @game.player_three.name %></div>
+  <div class="player four"><%= @game.player_four.name %></div>
   <h1>Team 2</h1>
 </div>
+</div>
+
+
+<div class="hit-or-miss">
+  <a href="#">Hit</a>
+  <a href="#">Miss</a>
+  <a href="#">Cancel</a>
 </div>
