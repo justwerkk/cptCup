@@ -9,7 +9,7 @@ class LeaguesController < ApplicationController
   # GET /leagues/1
   # GET /leagues/1.json
   def show
-    @game = @league.games.build(is_team_one_victory: true)
+    @game = @league.games.build
     @game.build_default_assocations
     @num_games = @league.games.count
 

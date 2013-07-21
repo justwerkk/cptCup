@@ -12,19 +12,19 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :player_one_id, "Winner One" %><br />
+    <%= f.label :player_one_id, "Team One" %><br />
     <%= f.select :player_one_id,  player_names %>
   </div>
   <div class="field">
-    <%= f.label :player_two_id, "Winner Two" %><br />
+    <%= f.label :player_two_id, "Team One" %><br />
     <%= f.select :player_two_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :player_three_id, "Loser One" %><br />
+    <%= f.label :player_three_id, "Team Two" %><br />
     <%= f.select :player_three_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :player_four_id, "Loser Two" %><br />
+    <%= f.label :player_four_id, "Team Two" %><br />
     <%= f.select :player_four_id, player_names %>
   </div>
   <div class="field">
@@ -32,7 +32,17 @@
     <%= f.number_field :cups_left %>
   </div>
   <div class="actions">
-    <%= f.hidden_field :is_team_one_victory %>
-    <%= f.submit "Add Game" %>
+    <%= hidden_field_tag :mode %>
+    <%= f.submit "Team One Wins", name: "completed" %>
+    <%= f.submit "Start Interactive Mode", name: "interactive" %>
   </div>
+<% end %>
+
+<% content_for(:script) do %>
+<script>
+$('input[type=submit]').click(function(){
+$('#mode').val($(this).attr('name'));
+$(this).submit();
+});
+</script>
 <% end %>

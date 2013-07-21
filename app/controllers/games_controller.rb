@@ -46,10 +46,18 @@ class GamesController < ApplicationController
   # POST /games.json
   def create
     @game = @league.games.build(params[:game])
+    use_interactive_mode = params[:mode] == "interactive"
+    @game.is_team_one_victory = true unless use_interactive_mode
 
     respond_to do |format|
       if @game.save
-        format.html { redirect_to league_path(@league), notice: 'Game was successfully created.' }
+        format.html do
+          if use_interactive_mode
+            redirect_to league_game_shot_tracker_url(@league, @game), notice: 'Game was successfully created.'
+          else
+            redirect_to @league, notice: 'Game was successfully created.'
+          end
+        end
         format.json { render json: @game, status: :created, location: @game }
       else
         @players = Player.all
@@ -98,7 +106,7 @@ class GamesController < ApplicationController
   end
 
   def shot_tracker
-    @game = Game.find(params[:id])
+    @game = Game.find(params[:game_id])
   end
 
   private
