@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   belongs_to :player_three, class_name: "Player", foreign_key: "player_three_id"
   belongs_to :player_four, class_name: "Player", foreign_key: "player_four_id"
   belongs_to :league
-  has_many :shots
+  has_many :shots, order: "created_at ASC"
 
   attr_accessible :cups_left,
     :player_one_id, :player_two_id, :player_three_id, :player_four_id, :league_id,

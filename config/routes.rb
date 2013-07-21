@@ -4,7 +4,8 @@ CptCup::Application.routes.draw do
   resources :leagues do
     resources :games do
       get :odds, :on => :collection
-      get :shot_tracker
+      get :shot_tracker, :on => :member
+      post :create_shot, :on => :member
     end
   end
 

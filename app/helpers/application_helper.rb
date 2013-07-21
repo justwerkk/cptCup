@@ -21,4 +21,12 @@ module ApplicationHelper
       "Team 2"
     end
   end
+
+  def team_for_shot(shot)
+    [shot.game.player_one_id, shot.game.player_two_id].include?(shot.player_id) ? 1 : 2
+  end
+
+  def hit_or_miss(shot)
+    shot.is_hit ? "hit" : "miss"
+  end
 end

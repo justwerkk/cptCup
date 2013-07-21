@@ -22,6 +22,12 @@
     -moz-border-radius: 75px;
   }
 
+  div.player:hover {
+    background-color: #fff;
+    border: #000000 2px solid;
+    box-sizing: border-box;
+  }
+
   div.player.one {left: 0;top: 0;}
   div.player.two {right: 0;top: 0;}
   div.player.three {left: 0;bottom: 0;}
@@ -30,6 +36,7 @@
   div.rack {
     margin: 0 auto 50px auto;
     width: 600px;
+    position: relative;
   }
 
   div.row {
@@ -51,17 +58,26 @@
     display: inline-block;
     box-sizing: border-box;
   }
-  div.hit:before {
-    content: "X";
-    font-size: 35px;
+
+  div.hit {
+    background-color: gray;
   }
+  div.hit span {
+    visibility: hidden;
+  }
+
   div.cup:hover {
     background-color: #fff;
     color: #000;
-    border: #000000 2px solid;
   }
 
-  div.hit-or-miss {
+  div.hit:hover {
+    background-color: gray;
+    color: #fff;
+  }
+
+
+  div#hit-or-miss {
     position: absolute;
     top: 0;
     left: 0;
@@ -71,23 +87,51 @@
     background-color: #000;
     opacity:0.9;
     filter:alpha(opacity=90);
-    z-index: 10000;
+    z-index: 100;
     display: none;
   }
 
-  div.hit-or-miss a{
+  div#hit-or-miss a{
     display: inline-block;
     margin: 25% 20px;
-    width: 200px;
+    width: 250px;
     height: 70px;
     background-color: #fff;
     text-decoration: none;
     font-size: 50px;
   }
 
-  div.hit-or-miss a:hover{
+  div#hit-or-miss a:hover{
     color: #000;
     background-color: #ffe;
+  }
+
+  div#actions {
+    text-transform: uppercase;
+  }
+
+  div.log {
+  position: absolute;
+  left: 0;
+  top: 0;
+  }
+
+  ul#shot-log { text-align: left; }
+
+  ul#shot-log li {
+  list-style-type: none;
+  }
+
+  li.hit:before {
+  content: "HIT";
+  color: green;
+  padding-right:16px;
+  }
+
+  li.miss:before {
+  content: "MISS";
+  color: red;
+  padding-right:5px;
   }
 
 </style>
@@ -96,62 +140,150 @@
 <div class="game">
   <div class="team">
     <h1>Team 1</h1>
-    <div class="player one"><%= @game.player_one.name %></div>
-    <div class="player two"><%= @game.player_two.name %></div>
+    <div class="player one" data-player-id=<%= @game.player_one_id %> data-team-id=1><%= @game.player_one.name %></div>
+    <div class="player two" data-player-id=<%= @game.player_two_id %> data-team-id=2><%= @game.player_two.name %></div>
   </div>
 
-<div class="rack">
-  <div class="row">
-    <div class="cup hit">7</div>
-    <div class="cup">8</div>
-    <div class="cup hit">9</div>
-    <div class="cup">10</div>
+  <div class="rack team-2">
+    <div class="row">
+      <div class="cup hit"><span>7</span></div>
+      <div class="cup"><span>8</span></div>
+      <div class="cup hit"><span>9</span></div>
+      <div class="cup"><span>10</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>4</span></div>
+      <div class="cup"><span>5</span></div>
+      <div class="cup"><span>6</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>2</span></div>
+      <div class="cup"><span>3</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>1</span></div>
+    </div>
   </div>
-  <div class="row">
-    <div class="cup">4</div>
-    <div class="cup">5</div>
-    <div class="cup">6</div>
+
+  <div class="rack team-1">
+    <div class="row">
+      <div class="cup"><span>1</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>3</span></div>
+      <div class="cup"><span>2</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>6</span></div>
+      <div class="cup"><span>5</span></div>
+      <div class="cup"><span>4</span></div>
+    </div>
+    <div class="row">
+      <div class="cup"><span>10</span></div>
+      <div class="cup"><span>9</span></div>
+      <div class="cup"><span>8</span></div>
+      <div class="cup"><span>7</span></div>
+    </div>
   </div>
-  <div class="row">
-    <div class="cup">2</div>
-    <div class="cup">3</div>
+
+  <div class="team">
+    <div class="player three" data-player-id=<%= @game.player_three_id %> data-team-id=2><%= @game.player_three.name %></div>
+    <div class="player four" data-player-id=<%= @game.player_four_id %> data-team-id=2><%= @game.player_four.name %></div>
+    <h1>Team 2</h1>
   </div>
-  <div class="row">
-    <div class="cup">1</div>
+
+  <div class="log">
+    <h2>Shot Log</h2>
+    <ul id="shot-log">
+      <% @game.shots.reverse.each do |shot| %>
+      <li class="team-<%= team_for_shot(shot) %> <%= hit_or_miss(shot) %>"><%= shot.player.name %> </li>
+      <% end %>
+    </ul>
   </div>
 </div>
 
-<div class="rack">
-  <div class="row">
-    <div class="cup">1</div>
-  </div>
-  <div class="row">
-    <div class="cup">3</div>
-    <div class="cup">2</div>
-  </div>
-  <div class="row">
-    <div class="cup">6</div>
-    <div class="cup">5</div>
-    <div class="cup">4</div>
-  </div>
-  <div class="row">
-    <div class="cup">10</div>
-    <div class="cup">9</div>
-    <div class="cup">8</div>
-    <div class="cup">7</div>
+
+<div id="hit-or-miss">
+  <div id="actions">
+    <a href="#" id="hit">Hit</a>
+    <a href="#" id="miss">Miss</a>
+    <a href="#" id="cancel">Cancel</a>
   </div>
 </div>
 
-<div class="team">
-  <div class="player three"><%= @game.player_three.name %></div>
-  <div class="player four"><%= @game.player_four.name %></div>
-  <h1>Team 2</h1>
-</div>
-</div>
+<% content_for :script do %>
+<script>
+var player;
+var team;
+var is_hit;
 
+function show_hit_miss(){
+$('#hit-or-miss').fadeIn();
+}
 
-<div class="hit-or-miss">
-  <a href="#">Hit</a>
-  <a href="#">Miss</a>
-  <a href="#">Cancel</a>
-</div>
+function select_cup() {
+$('#actions').hide();
+$(".rack.team-" + team).css("z-index", 101);
+}
+
+function add_shot(shot){
+//add to log
+ele = $("<li></li>");
+$('#shot-log').prepend(ele);
+
+//mark cup as hit
+}
+
+function create_shot(cup_position){
+$.ajax({
+  url: "/leagues/<%= @league.id %>/games/<%= @game.id %>/create_shot",
+  type: "POST",
+  data: { "shot[player_id]": player, "shot[is_hit]": is_hit, "shot[cup_position]": cup_position },
+  success: function(response) {
+    add_shot(response);
+  }
+});
+
+reset();
+}
+
+function reset(){
+player = null;
+is_hit = null;
+$(".rack").css("z-index", 1);
+$('#hit-or-miss').fadeOut();
+$('#actions').show();
+}
+
+$(document).ready(function() {
+
+$('.player').click(function(){
+player = $(this).data('player-id');
+team = $(this).data('team-id');
+show_hit_miss();
+});
+
+$('#cancel').click(function(){
+reset();
+});
+
+$('#hit').click(function(){
+is_hit = true;
+select_cup();
+});
+
+$('#miss').click(function(){
+is_hit = false;
+select_cup();
+});
+
+$('.cup').click(function(){
+if(!$(this).hasClass('hit')){
+cup_position = $(this).html().match(/\d/)[0];
+create_shot(cup_position);
+}
+});
+
+});
+</script>
+<% end %>

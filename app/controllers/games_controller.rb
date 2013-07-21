@@ -106,7 +106,32 @@ class GamesController < ApplicationController
   end
 
   def shot_tracker
-    @game = Game.find(params[:game_id])
+    @game = Game.find(params[:id])
+  end
+
+  # POST /games/1/shots
+  def shots_index
+    @shots = Shot.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @shots }
+    end
+  end
+
+  def create_shot
+    @game = Game.find(params[:id])
+    @shot = @game.shots.build(params[:shot])
+
+    respond_to do |format|
+      format.json do
+        if @shot.save
+          render json: @shot.to_json
+        else
+          render json: @shot.errors, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   private
