@@ -1,7 +1,84 @@
-<h1>Team 1 vs Team 2</h1>
+<% content_for :head do %>
+<style>
+  div.game {
+    text-align: center;
+  }
+  div.rack {
+    margin-bottom: 50px;
+  }
 
-<%= @game.player_one.name %>
-<%= @game.player_two.name %>
-VS
-<%= @game.player_three.name %>
-<%= @game.player_four.name %>
+  div.row {
+    width: 100%;
+    text-align: center;
+  }
+
+  div.cup {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    background-color: red;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    display: inline-block;
+  }
+</style>
+<% end %>
+
+<div class="game">
+<div class="team">
+  <h1>Team 1</h1>
+  <div class="player"><%= @game.player_one.name %></div>
+  <div class="player"><%= @game.player_two.name %></div>
+</div>
+
+<div class="rack">
+  <div class="row">
+    <div class="cup">7</div>
+    <div class="cup">8</div>
+    <div class="cup">9</div>
+    <div class="cup">10</div>
+  </div>
+  <div class="row">
+    <div class="cup">4</div>
+    <div class="cup">5</div>
+    <div class="cup">6</div>
+  </div>
+  <div class="row">
+    <div class="cup">2</div>
+    <div class="cup">3</div>
+  </div>
+  <div class="row">
+    <div class="cup">1</div>
+  </div>
+</div>
+
+<div class="rack">
+  <div class="row">
+    <div class="cup">1</div>
+  </div>
+  <div class="row">
+    <div class="cup">3</div>
+    <div class="cup">2</div>
+  </div>
+  <div class="row">
+    <div class="cup">6</div>
+    <div class="cup">5</div>
+    <div class="cup">4</div>
+  </div>
+  <div class="row">
+    <div class="cup">10</div>
+    <div class="cup">9</div>
+    <div class="cup">8</div>
+    <div class="cup">7</div>
+  </div>
+</div>
+
+<div class="team">
+  <div class="player"><%= @game.player_three.name %></div>
+  <div class="player"><%= @game.player_four.name %></div>
+  <h1>Team 2</h1>
+</div>
+</div>
