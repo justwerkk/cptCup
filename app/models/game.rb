@@ -85,6 +85,14 @@ class Game < ActiveRecord::Base
     players_score
   end
 
+  def team_1_hit_cups
+    self.shots.where(player_id: [player_one_id, player_two_id]).map(&:cup_position)
+  end
+
+  def team_2_hit_cups
+    self.shots.where(player_id: [player_three_id, player_four_id]).map(&:cup_position)
+  end
+
   def build_default_assocations
     self.build_player_one unless self.player_one
     self.build_player_two unless self.player_two

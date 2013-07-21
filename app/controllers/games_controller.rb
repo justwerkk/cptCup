@@ -97,6 +97,10 @@ class GamesController < ApplicationController
     end
   end
 
+  def shot_tracker
+    @game = Game.find(params[:id])
+  end
+
   private
 
   def set_league

@@ -161,4 +161,27 @@ describe Game do
     end
   end
 
+  context "when given a game in progress" do
+    before(:each) do
+      @p1 = create(:player)
+      @p2 = create(:player)
+      @p3 = create(:player)
+      @p4 = create(:player)
+
+      @game = create(:game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4)
+      create(:shot, game: @game, player: @p1, is_hit: true, cup_position: 1)
+      create(:shot, game: @game, player: @p2, is_hit: true, cup_position: 8)
+      create(:shot, game: @game, player: @p3, is_hit: true, cup_position: 1)
+      create(:shot, game: @game, player: @p4, is_hit: true, cup_position: 7)
+    end
+
+    it "should calculate team 1 cups hit" do
+      @game.team_1_hit_cups.sort.should == [1,8]
+    end
+
+    it "should calculate team 2 cups hit" do
+      @game.team_2_hit_cups.sort.should == [1,7]
+    end
+  end
+
 end
