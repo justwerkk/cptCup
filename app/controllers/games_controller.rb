@@ -53,7 +53,7 @@ class GamesController < ApplicationController
       if @game.save
         format.html do
           if use_interactive_mode
-            redirect_to league_game_shot_tracker_url(@league, @game), notice: 'Game was successfully created.'
+            redirect_to shot_tracker_league_game_url(@league, @game), notice: 'Game was successfully created.'
           else
             redirect_to @league, notice: 'Game was successfully created.'
           end

@@ -40,7 +40,7 @@ describe GamesController do
     context "with valid params" do
       it "should redirect to games/shot_tracker if in interactive mode" do
         post :create, {:game => {player_one_id: @p1.id, player_two_id: @p2.id, player_three_id: @p3.id, player_four_id: @p4.id}, league_id: @league.id, mode: 'interactive'}
-        response.should redirect_to(league_game_shot_tracker_url(@league, assigns(:game)))
+        response.should redirect_to(shot_tracker_league_game_url(@league, assigns(:game)))
       end
 
       it "should redirect to league index if regular mode" do

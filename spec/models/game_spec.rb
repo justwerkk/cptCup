@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Game do
-  before(:all) do
+  before(:each) do
     @p1 = create(:player)
     @p2 = create(:player)
     @p3 = create(:player)
@@ -12,11 +12,7 @@ describe Game do
     @multiplier = 400.0
   end
 
-  after(:all) do
-    Player.delete_all
-  end
-
-  it "has a valid factory" do
+  it "should be valid" do
     build(:game).should be_valid
   end
 
@@ -86,34 +82,17 @@ describe Game do
 
     it "is zero sum" do
       games = []
-      15.times do
-        players = [@p1, @p2, @p3, @p4].shuffle
-        games << build(:completed_game, player_one: players.pop, player_two: players.pop, player_three: players.pop, player_four: players.pop)
-      end
+      players = [@p1, @p2, @p3, @p4].shuffle
+      games << build(:completed_game, player_one: players.pop, player_two: players.pop, player_three: players.pop, player_four: players.pop)
 
       rankings = Game.calculate_rankings(games, @starting_score, @k_factor, @multiplier)
       rankings.values.reduce(:+).should be_within(0.001).of(@starting_score*4)
     end
 
-    it "rewards scores in a logarithmic curve" do
-      games = []
-      p1_scores = [Game.calculate_rankings(games, @starting_score, @k_factor, @multiplier)[@p1.id]]
-
-      20.times do
-        games << build(:completed_game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4)
-        p1_scores << Game.calculate_rankings(games, @starting_score, @k_factor, @multiplier)[@p1.id]
-      end
-
-      p1_score_diffs = []
-      (0...p1_scores.length-1).each {|i| p1_score_diffs[i] = p1_scores[i+1] - p1_scores[i]}
-
-      p1_score_diffs.should == p1_score_diffs.sort.reverse
-    end
-
     it "rewards underdogs more than the favorites" do
       games = []
 
-      5.times do
+      2.times do
         games << build(:completed_game, player_one: @p1, player_two: @p2, player_three: @p3, player_four: @p4)
       end
 
