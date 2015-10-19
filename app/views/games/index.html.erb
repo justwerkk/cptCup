@@ -2,27 +2,31 @@
 
 <table>
   <tr>
-    <th>League
-    <th>Player one
-    <th>Player two
-    <th>Player three
-    <th>Player four
-    <th>Winning team
-    <th>Cups left
-    <th>Date
-    <th>
+    <th>League</th>
+    <th>Player one</th>
+    <th>Player two</th>
+    <th>Player three</th>
+    <th>Player four</th>
+    <th>Winning team</th>
+    <th>Cups left</th>
+    <th>Date</th>
+    <th></th>
+    <th></th>
+  </tr>
 
 <% @games.each do |game| %>
   <tr>
-    <td><%= @league.name %>
-    <td><%= game.player_one.name %>
-    <td><%= game.player_two.name %>
-    <td><%= game.player_three.name %>
-    <td><%= game.player_four.name %>
-    <td><%= winner_string(game) %>
-    <td><%= game.cups_left %>
-    <td><%= game.created_at.strftime("%Y-%m-%d") %>
-    <td><%= link_to 'Edit', edit_league_game_path(@league, game) %>
+    <td><%= @league.name %></td>
+    <td><%= game.player_one.name %></td>
+    <td><%= game.player_two.name %></td>
+    <td><%= game.player_three.name %></td>
+    <td><%= game.player_four.name %></td>
+    <td><%= winner_string(game) %></td>
+    <td><%= game.cups_left %></td>
+    <td><%= game.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+    <td><%= link_to 'Edit', edit_league_game_path(@league, game) %></td>
+    <td><%= link_to('Interactive Mode', shot_tracker_league_game_path(@league, game)) if game.is_pending? %></td>
+  </tr>
 <% end %>
 </table>
 

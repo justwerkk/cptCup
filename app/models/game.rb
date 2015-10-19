@@ -105,6 +105,10 @@ class Game < ActiveRecord::Base
     hit_cups.include?(cup_position)
   end
 
+  def is_pending?
+    self.is_team_one_victory.nil?
+  end
+
   private
 
   def not_same_player
