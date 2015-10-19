@@ -195,7 +195,7 @@
     <h2>Shot Log</h2>
     <ul id="shot-log">
       <% @game.shots.reverse.each do |shot| %>
-	<li class="team-<%= team_for_shot(shot) %> <%= hit_or_miss(shot) %>"><%= shot.player.name %> (Cup #<%= shot.cup_position %>)</li>
+	<li class="team-<%= team_for_shot(shot) %> <%= hit_or_miss(shot) %>"><%= shot.player.name %><%= cup_position(shot) %></li>
       <% end %>
     </ul>
   </div>
@@ -228,7 +228,8 @@
    function add_shot(shot){
      //add to log
      hit = shot["is_hit"] ? 'hit' : 'miss';
-     ele = '<li class="team-' + shot["team"] + ' ' + hit + '">' + shot["player_name"] + ' (Cup #' + shot["cup_position"] + ')</li>';
+     cup_position = shot["is_hit"] ? ' (cup #' + shot['cup_position'] + ')' : '';
+     ele = '<li class="team-' + shot["team"] + ' ' + hit + '">' + shot["player_name"] + cup_position + '</li>';
      $('#shot-log').prepend(ele);
 
      //mark cup as hit
@@ -280,12 +281,12 @@
 
      $('#miss').click(function(){
        is_hit = false;
-       select_cup();
+       create_shot(null);
      });
 
      $('.cup').click(function(){
        if(!$(this).hasClass('hit')){
-	 cup_position = $(this).html().match(/\d/)[0];
+	 cup_position = $(this).data('cup-position');
 	 create_shot(cup_position);
        }
      });

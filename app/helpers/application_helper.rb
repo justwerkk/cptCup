@@ -33,4 +33,12 @@ module ApplicationHelper
   def check_hit(game, team, cup_position)
     game.cup_is_hit?(team, cup_position) ? " hit" : ""
   end
+
+  def cup_position(shot)
+    if shot.is_hit
+      " (cup ##{shot.cup_position})"
+    else
+      ""
+    end
+  end
 end
