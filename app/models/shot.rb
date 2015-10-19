@@ -4,6 +4,14 @@ class Shot < ActiveRecord::Base
   belongs_to :player
   validate :unique_cups
 
+  def player_name
+    player.name
+  end
+
+  def team
+    [game.player_one_id, game.player_two_id].include?(player_id) ? 1 : 2
+  end
+
   private
 
   def unique_cups

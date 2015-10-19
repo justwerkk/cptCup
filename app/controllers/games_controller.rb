@@ -126,7 +126,7 @@ class GamesController < ApplicationController
     respond_to do |format|
       format.json do
         if @shot.save
-          render json: @shot.to_json
+          render json: @shot.to_json(:methods => [:player_name, :team])
         else
           render json: @shot.errors, status: :unprocessable_entity
         end

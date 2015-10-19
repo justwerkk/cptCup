@@ -1,139 +1,139 @@
 <% content_for :head do %>
-<style>
-  h1 { font-size: 50px; }
+  <style>
+   h1 { font-size: 50px; }
 
-  .game {
-    text-align: center;
-  }
-  .team{
-    position: relative;
-    width: 600px;
-    margin: 0 auto;
-  }
+   .game {
+     text-align: center;
+   }
+   .team{
+     position: relative;
+     width: 600px;
+     margin: 0 auto;
+   }
 
-  .player {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    background-color: green;
-    font-weight: bold;
-    -webkit-border-radius: 75px;
-    -moz-border-radius: 75px;
-  }
+   .player {
+     position: absolute;
+     width: 150px;
+     height: 150px;
+     line-height: 150px;
+     background-color: green;
+     font-weight: bold;
+     -webkit-border-radius: 75px;
+     -moz-border-radius: 75px;
+   }
 
-  .player:hover {
-    background-color: #fff;
-    border: #000000 2px solid;
-    box-sizing: border-box;
-  }
+   .player:hover {
+     background-color: #fff;
+     border: #000000 2px solid;
+     box-sizing: border-box;
+   }
 
-  .player.one {left: 0;top: 0;}
-  .player.two {right: 0;top: 0;}
-  .player.three {left: 0;bottom: 0;}
-  .player.four {right: 0;bottom: 0;}
+   .player.one {left: 0;top: 0;}
+   .player.two {right: 0;top: 0;}
+   .player.three {left: 0;bottom: 0;}
+   .player.four {right: 0;bottom: 0;}
 
-  .rack {
-    margin: 0 auto 50px auto;
-    width: 600px;
-    position: relative;
-  }
+   .rack {
+     margin: 0 auto 50px auto;
+     width: 600px;
+     position: relative;
+   }
 
-  .row {
-    width: 215px;
-    text-align: center;
-    margin: 0 auto;
-  }
+   .row {
+     width: 215px;
+     text-align: center;
+     margin: 0 auto;
+   }
 
-  .cup {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    background-color: red;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    display: inline-block;
-    box-sizing: border-box;
-  }
+   .cup {
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     -webkit-border-radius: 25px;
+     -moz-border-radius: 25px;
+     background-color: red;
+     text-align: center;
+     font-weight: bold;
+     color: #fff;
+     display: inline-block;
+     box-sizing: border-box;
+   }
 
-  div.hit {
-    background-color: gray;
-  }
-  div.hit span {
-    visibility: hidden;
-  }
+   div.hit {
+     background-color: gray;
+   }
+   div.hit span {
+     visibility: hidden;
+   }
 
-  .cup:hover {
-    background-color: #fff;
-    color: #000;
-  }
+   .cup:hover {
+     background-color: #fff;
+     color: #000;
+   }
 
-  div.hit:hover {
-    background-color: gray;
-    color: #fff;
-  }
+   div.hit:hover {
+     background-color: gray;
+     color: #fff;
+   }
 
-  #hit-or-miss {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    background-color: #000;
-    opacity:0.9;
-    filter:alpha(opacity=90);
-    z-index: 100;
-    display: none;
-  }
+   #hit-or-miss {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     text-align: center;
+     background-color: #000;
+     opacity:0.9;
+     filter:alpha(opacity=90);
+     z-index: 100;
+     display: none;
+   }
 
-  #hit-or-miss a{
-    display: inline-block;
-    margin: 25% 20px;
-    width: 250px;
-    height: 70px;
-    background-color: #fff;
-    text-decoration: none;
-    font-size: 50px;
-  }
+   #hit-or-miss a{
+     display: inline-block;
+     margin: 25% 20px;
+     width: 250px;
+     height: 70px;
+     background-color: #fff;
+     text-decoration: none;
+     font-size: 50px;
+   }
 
-  #hit-or-miss a:hover{
-    color: #000;
-    background-color: #ffe;
-  }
+   #hit-or-miss a:hover{
+     color: #000;
+     background-color: #ffe;
+   }
 
-  #actions {
-    text-transform: uppercase;
-  }
+   #actions {
+     text-transform: uppercase;
+   }
 
-  .log {
-  position: absolute;
-  left: 0;
-  top: 0;
-  }
+   .log {
+     position: absolute;
+     left: 0;
+     top: 0;
+   }
 
-  #shot-log { text-align: left; }
+   #shot-log { text-align: left; }
 
-  #shot-log li {
-  list-style-type: none;
-  }
+   #shot-log li {
+     list-style-type: none;
+   }
 
-  li.hit:before {
-  content: "HIT";
-  color: green;
-  padding-right:16px;
-  }
+   li.hit:before {
+     content: "HIT";
+     color: green;
+     padding-right:16px;
+   }
 
-  li.miss:before {
-  content: "MISS";
-  color: red;
-  padding-right:5px;
-  }
+   li.miss:before {
+     content: "MISS";
+     color: red;
+     padding-right:5px;
+   }
 
-</style>
+  </style>
 <% end %>
 
 <div class="game">
@@ -195,7 +195,7 @@
     <h2>Shot Log</h2>
     <ul id="shot-log">
       <% @game.shots.reverse.each do |shot| %>
-      <li class="team-<%= team_for_shot(shot) %> <%= hit_or_miss(shot) %>"><%= shot.player.name %> </li>
+	<li class="team-<%= team_for_shot(shot) %> <%= hit_or_miss(shot) %>"><%= shot.player.name %> (Cup #<%= shot.cup_position %>)</li>
       <% end %>
     </ul>
   </div>
@@ -211,82 +211,84 @@
 </div>
 
 <% content_for :script do %>
-<script>
-var player;
-var team;
-var is_hit;
+  <script>
+   var player;
+   var team;
+   var is_hit;
 
-function show_hit_miss(){
-  $('#hit-or-miss').fadeIn();
-}
+   function show_hit_miss(){
+     $('#hit-or-miss').fadeIn();
+   }
 
-function select_cup() {
-  $('#actions').hide();
-  $(".rack.team-" + team).css("z-index", 101);
-}
+   function select_cup() {
+     $('#actions').hide();
+     $(".rack.team-" + team).css("z-index", 101);
+   }
 
-function add_shot(shot){
-  //add to log
-  ele = $("<li>");
-  $('#shot-log').prepend(ele);
+   function add_shot(shot){
+     //add to log
+     debugger;
+     hit = shot["is_hit"] ? 'hit' : 'miss';
+     ele = '<li class="team-' + shot["team"] + ' ' + hit + '">' + shot["player_name"] + ' (Cup #' + shot["cup_position"] + ')</li>';
+     $('#shot-log').prepend(ele);
 
-  //mark cup as hit
-}
+     //mark cup as hit
+   }
 
-function create_shot(cup_position){
-$.ajax({
-  url: "<%= create_shot_league_game_path(@league, @game) %>",
-  type: "POST",
-  data: {
-    shot: {
-      player_id: player,
-      is_hit: is_hit,
-      cup_position: cup_position }}, //"shot[player_id]": player, "shot[is_hit]": is_hit, "shot[cup_position]": cup_position },
-  success: function(response) {
-    add_shot(response);
-  }
-});
+   function create_shot(cup_position){
+     $.ajax({
+       url: "<%= create_shot_league_game_path(@league, @game) %>",
+       type: "POST",
+       data: {
+	 shot: {
+	   player_id: player,
+	   is_hit: is_hit,
+	   cup_position: cup_position }}, //"shot[player_id]": player, "shot[is_hit]": is_hit, "shot[cup_position]": cup_position },
+       success: function(response) {
+	 add_shot(response);
+       }
+     });
 
-reset();
-}
+     reset();
+   }
 
-function reset(){
-  player = null;
-  is_hit = null;
-  $(".rack").css("z-index", 1);
-  $('#hit-or-miss').fadeOut();
-  $('#actions').show();
-}
+   function reset(){
+     player = null;
+     is_hit = null;
+     $(".rack").css("z-index", 1);
+     $('#hit-or-miss').fadeOut();
+     $('#actions').show();
+   }
 
-$(document).ready(function() {
+   $(document).ready(function() {
 
-$('.player').click(function(){
-  player = $(this).data('player-id');
-  team = $(this).data('team-id');
-  show_hit_miss();
-});
+     $('.player').click(function(){
+       player = $(this).data('player-id');
+       team = $(this).data('team-id');
+       show_hit_miss();
+     });
 
-$('#cancel').click(function(){
-  reset();
-});
+     $('#cancel').click(function(){
+       reset();
+     });
 
-$('#hit').click(function(){
-  is_hit = true;
-  select_cup();
-});
+     $('#hit').click(function(){
+       is_hit = true;
+       select_cup();
+     });
 
-$('#miss').click(function(){
-  is_hit = false;
-  select_cup();
-});
+     $('#miss').click(function(){
+       is_hit = false;
+       select_cup();
+     });
 
-$('.cup').click(function(){
-if(!$(this).hasClass('hit')){
-cup_position = $(this).html().match(/\d/)[0];
-create_shot(cup_position);
-}
-});
+     $('.cup').click(function(){
+       if(!$(this).hasClass('hit')){
+	 cup_position = $(this).html().match(/\d/)[0];
+	 create_shot(cup_position);
+       }
+     });
 
-});
-</script>
+   });
+  </script>
 <% end %>
