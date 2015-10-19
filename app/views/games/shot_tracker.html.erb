@@ -33,6 +33,10 @@
    .player.three {left: 0;bottom: 0;}
    .player.four {right: 0;bottom: 0;}
 
+   .rerack-selector {
+     margin: 10px;
+   }
+
    .rack {
      margin: 0 auto 50px auto;
      width: 600px;
@@ -144,45 +148,112 @@
   </div>
 
   <div class="rack team-2">
-    <div class="row">
-      <div data-cup-position=7 class="cup<%= check_hit(@game, 2, 7) %>"><span>7</span></div>
-      <div data-cup-position=8 class="cup<%= check_hit(@game, 2, 8) %>"><span>8</span></div>
-      <div data-cup-position=9 class="cup<%= check_hit(@game, 2, 9) %>"><span>9</span></div>
-      <div data-cup-position=10 class="cup<%= check_hit(@game, 2, 10) %>"><span>10</span></div>
+    <select class="rerack-selector" data-team=2>
+      <option value=1 >1st Rack</option>
+      <option value=2 >2nd Rack</option>
+      <option value=3 >3rd Rack</option>
+    </select>
+
+    <div class="rerack rerack-1">
+      <div class="row">
+	<div data-cup-position=7 class="cup<%= check_hit(@game, 2, 7) %>"><span>7</span></div>
+	<div data-cup-position=8 class="cup<%= check_hit(@game, 2, 8) %>"><span>8</span></div>
+	<div data-cup-position=9 class="cup<%= check_hit(@game, 2, 9) %>"><span>9</span></div>
+	<div data-cup-position=10 class="cup<%= check_hit(@game, 2, 10) %>"><span>10</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=4 class="cup<%= check_hit(@game, 2, 4) %>"><span>4</span></div>
+	<div data-cup-position=5 class="cup<%= check_hit(@game, 2, 5) %>"><span>5</span></div>
+	<div data-cup-position=6 class="cup<%= check_hit(@game, 2, 6) %>"><span>6</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=2 class="cup<%= check_hit(@game, 2, 2) %>"><span>2</span></div>
+	<div data-cup-position=3 class="cup<%= check_hit(@game, 2, 3) %>"><span>3</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=1 class="cup<%= check_hit(@game, 2, 1) %>"><span>1</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div data-cup-position=4 class="cup<%= check_hit(@game, 2, 4) %>"><span>4</span></div>
-      <div data-cup-position=5 class="cup<%= check_hit(@game, 2, 5) %>"><span>5</span></div>
-      <div data-cup-position=6 class="cup<%= check_hit(@game, 2, 6) %>"><span>6</span></div>
+
+    <div class="rerack rerack-2" style='display:none;'>
+      <div class="row">
+	<div data-cup-position=14 class="cup<%= check_hit(@game, 2, 14) %>"><span>14</span></div>
+	<div data-cup-position=15 class="cup<%= check_hit(@game, 2, 15) %>"><span>15</span></div>
+	<div data-cup-position=16 class="cup<%= check_hit(@game, 2, 16) %>"><span>16</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=12 class="cup<%= check_hit(@game, 2, 12) %>"><span>12</span></div>
+	<div data-cup-position=13 class="cup<%= check_hit(@game, 2, 13) %>"><span>13</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=11 class="cup<%= check_hit(@game, 2, 11) %>"><span>11</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div data-cup-position=2 class="cup<%= check_hit(@game, 2, 2) %>"><span>2</span></div>
-      <div data-cup-position=3 class="cup<%= check_hit(@game, 2, 3) %>"><span>3</span></div>
-    </div>
-    <div class="row">
-      <div data-cup-position=1 class="cup<%= check_hit(@game, 2, 1) %>"><span>1</span></div>
+
+    <div class="rerack rerack-3" style='display:none;'>
+      <div class="row">
+	<div data-cup-position=18 class="cup<%= check_hit(@game, 2, 18) %>"><span>18</span></div>
+	<div data-cup-position=19 class="cup<%= check_hit(@game, 2, 19) %>"><span>19</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=17 class="cup<%= check_hit(@game, 2, 17) %>"><span>17</span></div>
+      </div>
     </div>
   </div>
 
   <div class="rack team-1">
-    <div class="row">
-      <div data-cup-position=1 class="cup<%= check_hit(@game, 1, 1) %>"><span>1</span></div>
+    <select class="rerack-selector" data-team=1>
+      <option value=1 >1st Rack</option>
+      <option value=2 >2nd Rack</option>
+      <option value=3 >3rd Rack</option>
+    </select>
+
+    <div class="rerack rerack-1">
+      <div class="row">
+	<div data-cup-position=1 class="cup<%= check_hit(@game, 1, 1) %>"><span>1</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=3 class="cup<%= check_hit(@game, 1, 3) %>"><span>3</span></div>
+	<div data-cup-position=2 class="cup<%= check_hit(@game, 1, 2) %>"><span>2</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=6 class="cup<%= check_hit(@game, 1, 6) %>"><span>6</span></div>
+	<div data-cup-position=5 class="cup<%= check_hit(@game, 1, 5) %>"><span>5</span></div>
+	<div data-cup-position=4 class="cup<%= check_hit(@game, 1, 4) %>"><span>4</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=10 class="cup<%= check_hit(@game, 1, 10) %>"><span>10</span></div>
+	<div data-cup-position=9 class="cup<%= check_hit(@game, 1, 9) %>"><span>9</span></div>
+	<div data-cup-position=8 class="cup<%= check_hit(@game, 1, 8) %>"><span>8</span></div>
+	<div data-cup-position=7 class="cup<%= check_hit(@game, 1, 7) %>"><span>7</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div data-cup-position=3 class="cup<%= check_hit(@game, 1, 3) %>"><span>3</span></div>
-      <div data-cup-position=2 class="cup<%= check_hit(@game, 1, 2) %>"><span>2</span></div>
+
+    <div class="rerack rerack-2" style='display:none;'>
+      <div class="row">
+	<div data-cup-position=11 class="cup<%= check_hit(@game, 1, 11) %>"><span>11</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=13 class="cup<%= check_hit(@game, 1, 13) %>"><span>13</span></div>
+	<div data-cup-position=12 class="cup<%= check_hit(@game, 1, 12) %>"><span>12</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=16 class="cup<%= check_hit(@game, 1, 16) %>"><span>16</span></div>
+	<div data-cup-position=15 class="cup<%= check_hit(@game, 1, 15) %>"><span>15</span></div>
+	<div data-cup-position=14 class="cup<%= check_hit(@game, 1, 14) %>"><span>14</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div data-cup-position=6 class="cup<%= check_hit(@game, 1, 6) %>"><span>6</span></div>
-      <div data-cup-position=5 class="cup<%= check_hit(@game, 1, 5) %>"><span>5</span></div>
-      <div data-cup-position=4 class="cup<%= check_hit(@game, 1, 4) %>"><span>4</span></div>
+
+    <div class="rerack rerack-3" style='display:none;'>
+      <div class="row">
+	<div data-cup-position=17 class="cup<%= check_hit(@game, 1, 17) %>"><span>17</span></div>
+      </div>
+      <div class="row">
+	<div data-cup-position=19 class="cup<%= check_hit(@game, 1, 19) %>"><span>19</span></div>
+	<div data-cup-position=18 class="cup<%= check_hit(@game, 1, 18) %>"><span>18</span></div>
+      </div>
     </div>
-    <div class="row">
-      <div data-cup-position=10 class="cup<%= check_hit(@game, 1, 10) %>"><span>10</span></div>
-      <div data-cup-position=9 class="cup<%= check_hit(@game, 1, 9) %>"><span>9</span></div>
-      <div data-cup-position=8 class="cup<%= check_hit(@game, 1, 8) %>"><span>8</span></div>
-      <div data-cup-position=7 class="cup<%= check_hit(@game, 1, 7) %>"><span>7</span></div>
-    </div>
+
   </div>
 
   <div class="team">
@@ -289,6 +360,13 @@
 	 cup_position = $(this).data('cup-position');
 	 create_shot(cup_position);
        }
+     });
+
+     $('.rerack-selector').on('change', function() {
+       selected_rack = this.value;
+       team = $(this).data('team');
+       $('div.team-' + team + ' .rerack').hide();
+       $('div.team-' + team + ' .rerack-' + selected_rack).show();
      });
 
    });
