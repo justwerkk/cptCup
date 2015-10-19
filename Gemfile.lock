@@ -28,12 +28,10 @@ GEM
     activesupport (3.2.8)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    addressable (2.3.2)
     arel (3.0.2)
     builder (3.0.0)
     diff-lcs (1.2.4)
     erubis (2.7.0)
-    excon (0.16.4)
     execjs (1.4.0)
       multi_json (~> 1.0)
     factory_girl (4.1.0)
@@ -41,14 +39,6 @@ GEM
     factory_girl_rails (4.1.0)
       factory_girl (~> 4.1.0)
       railties (>= 3.0.0)
-    heroku (2.32.8)
-      heroku-api (~> 0.3.5)
-      launchy (>= 0.3.2)
-      netrc (~> 0.7.7)
-      rest-client (~> 1.6.1)
-      rubyzip
-    heroku-api (0.3.5)
-      excon (~> 0.16.1)
     hike (1.2.1)
     i18n (0.6.1)
     journey (1.0.4)
@@ -57,15 +47,12 @@ GEM
       thor (~> 0.14)
     json (1.7.5)
     kgio (2.7.4)
-    launchy (2.1.2)
-      addressable (~> 2.3)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.19)
     multi_json (1.3.6)
-    netrc (0.7.7)
     pg (0.14.1)
     polyglot (0.3.3)
     rack (1.4.1)
@@ -94,8 +81,6 @@ GEM
     rake (0.9.2.2)
     rdoc (3.12)
       json (~> 1.4)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
     rspec-core (2.14.3)
     rspec-expectations (2.14.0)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -107,7 +92,6 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    rubyzip (0.9.9)
     sass (3.2.1)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -136,7 +120,6 @@ PLATFORMS
 
 DEPENDENCIES
   factory_girl_rails (~> 4.0)
-  heroku
   jquery-rails
   json
   pg
@@ -145,3 +128,6 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
   unicorn
+
+BUNDLED WITH
+   1.10.6
