@@ -145,43 +145,43 @@
 
   <div class="rack team-2">
     <div class="row">
-      <div class="cup hit"><span>7</span></div>
-      <div class="cup"><span>8</span></div>
-      <div class="cup hit"><span>9</span></div>
-      <div class="cup"><span>10</span></div>
+      <div data-cup-position=7 class="cup hit"><span>7</span></div>
+      <div data-cup-position=8 class="cup"><span>8</span></div>
+      <div data-cup-position=9 class="cup hit"><span>9</span></div>
+      <div data-cup-position=10 class="cup"><span>10</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>4</span></div>
-      <div class="cup"><span>5</span></div>
-      <div class="cup"><span>6</span></div>
+      <div data-cup-position=4 class="cup"><span>4</span></div>
+      <div data-cup-position=5 class="cup"><span>5</span></div>
+      <div data-cup-position=6 class="cup"><span>6</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>2</span></div>
-      <div class="cup"><span>3</span></div>
+      <div data-cup-position=2 class="cup"><span>2</span></div>
+      <div data-cup-position=3 class="cup"><span>3</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>1</span></div>
+      <div data-cup-position=1 class="cup"><span>1</span></div>
     </div>
   </div>
 
   <div class="rack team-1">
     <div class="row">
-      <div class="cup"><span>1</span></div>
+      <div data-cup-position=1 class="cup"><span>1</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>3</span></div>
-      <div class="cup"><span>2</span></div>
+      <div data-cup-position=3 class="cup"><span>3</span></div>
+      <div data-cup-position=2 class="cup"><span>2</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>6</span></div>
-      <div class="cup"><span>5</span></div>
-      <div class="cup"><span>4</span></div>
+      <div data-cup-position=6 class="cup"><span>6</span></div>
+      <div data-cup-position=5 class="cup"><span>5</span></div>
+      <div data-cup-position=4 class="cup"><span>4</span></div>
     </div>
     <div class="row">
-      <div class="cup"><span>10</span></div>
-      <div class="cup"><span>9</span></div>
-      <div class="cup"><span>8</span></div>
-      <div class="cup"><span>7</span></div>
+      <div data-cup-position=10 class="cup"><span>10</span></div>
+      <div data-cup-position=9 class="cup"><span>9</span></div>
+      <div data-cup-position=8 class="cup"><span>8</span></div>
+      <div data-cup-position=7 class="cup"><span>7</span></div>
     </div>
   </div>
 
@@ -227,12 +227,13 @@
 
    function add_shot(shot){
      //add to log
-     debugger;
      hit = shot["is_hit"] ? 'hit' : 'miss';
      ele = '<li class="team-' + shot["team"] + ' ' + hit + '">' + shot["player_name"] + ' (Cup #' + shot["cup_position"] + ')</li>';
      $('#shot-log').prepend(ele);
 
      //mark cup as hit
+     cup_div = $('.rack.team-' + shot['team']).find('div[data-cup-position="' + shot['cup_position'] + '"]');
+     cup_div.addClass("hit");
    }
 
    function create_shot(cup_position){

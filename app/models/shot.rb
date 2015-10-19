@@ -15,12 +15,12 @@ class Shot < ActiveRecord::Base
   private
 
   def unique_cups
-    if [game.player_one_id, game.player_two_id].include?(player_id)
-      if game.player_one.shots.where(cup_position: cup_position).exists? || game.player_two.shots.where(cup_position: cup_position).exists?
+    if self.team == 1
+      if game.player_one.shots.where(cup_position: cup_position, is_hit: true).exists? || game.player_two.shots.where(cup_position: cup_position, is_hit: true).exists?
         self.errors.add(:cup_position, "cant hit the same cup twice")
       end
     else
-      if game.player_three.shots.where(cup_position: cup_position).exists? || game.player_four.shots.where(cup_position: cup_position).exists?
+      if game.player_three.shots.where(cup_position: cup_position, is_hit: true).exists? || game.player_four.shots.where(cup_position: cup_position, is_hit: true).exists?
         self.errors.add(:cup_position, "cant hit the same cup twice")
       end
     end
