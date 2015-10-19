@@ -67,6 +67,16 @@ class GamesController < ApplicationController
     end
   end
 
+  def select_winner
+    @game = Game.find(params[:id])
+    cups_left = params[:cups_left].to_i
+    winning_team = params[:winning_team].to_i
+
+    @game.select_winner(winning_team, cups_left)
+
+    redirect_to @league, notice: 'Game was successfully recorded!'
+  end
+
   # PUT /games/1
   # PUT /games/1.json
   def update
@@ -107,6 +117,7 @@ class GamesController < ApplicationController
 
   def shot_tracker
     @game = Game.find(params[:id])
+    raise "Cannot use shot_tracker on completed game" unless @game.is_pending?
   end
 
   # POST /games/1/shots

@@ -80,6 +80,16 @@
      color: #fff;
    }
 
+   #select-winner {
+     display: none;
+   }
+
+   #back-to-league {
+     position: absolute;
+     top: 10px;
+     right: 10px;
+   }
+
    #hit-or-miss {
      position: absolute;
      top: 0;
@@ -202,12 +212,6 @@
   </div>
 
   <div class="rack team-1">
-    <select class="rerack-selector" data-team=1>
-      <option value=1 >1st Rack</option>
-      <option value=2 >2nd Rack</option>
-      <option value=3 >3rd Rack</option>
-    </select>
-
     <div class="rerack rerack-1">
       <div class="row">
 	<div data-cup-position=1 class="cup<%= check_hit(@game, 1, 1) %>"><span>1</span></div>
@@ -254,6 +258,12 @@
       </div>
     </div>
 
+    <select class="rerack-selector" data-team=1>
+      <option value=1 >1st Rack</option>
+      <option value=2 >2nd Rack</option>
+      <option value=3 >3rd Rack</option>
+    </select>
+
   </div>
 
   <div class="team">
@@ -271,9 +281,19 @@
     </ul>
   </div>
 
-  <%= link_to "Back to league page", league_path(@game.league_id) %>
+
+  <%= link_to "Select Winner", league_path(@game.league_id), :id => 'show-select-winner' %><br />
+
+  <div id="select-winner">
+    <%= form_tag(select_winner_league_game_path(@game.league, @game), method: :post) do |f| %>
+      <%= label_tag :winning_team, "Winning Team" %>: <%= select_tag :winning_team,  options_for_select([["Team 1", 1], ["Team 2", 2]]) %><br />
+      <%= label_tag :cups_left, "Cups Left" %>: <%= text_field_tag :cups_left %><br />
+      <%= submit_tag "Record Winner!" %>
+    <% end %>
+  </div>
 </div>
 
+<%= link_to "Back to league page", league_path(@game.league_id), :id => 'back-to-league' %>
 
 <div id="hit-or-miss">
   <div id="actions">
@@ -288,6 +308,10 @@
    var player;
    var team;
    var is_hit;
+
+   function toggle_select_winner(){
+     $('#select-winner').toggle();
+   }
 
    function show_hit_miss(){
      $('#hit-or-miss').fadeIn();
@@ -370,6 +394,12 @@
        $('div.team-' + team + ' .rerack').hide();
        $('div.team-' + team + ' .rerack-' + selected_rack).show();
      });
+
+     $('#show-select-winner').click(function(){
+       event.preventDefault()
+       toggle_select_winner();
+     });
+
 
    });
   </script>

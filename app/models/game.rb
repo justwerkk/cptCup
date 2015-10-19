@@ -109,6 +109,20 @@ class Game < ActiveRecord::Base
     self.is_team_one_victory.nil?
   end
 
+  def select_winner(winning_team, cups_left)
+    if winning_team == 1
+      self.is_team_one_victory = true
+    elsif winning_team == 2
+      self.is_team_one_victory = false
+    else
+      raise "winning team must be 1 or 2"
+    end
+
+    self.cups_left = cups_left
+
+    save!
+  end
+
   private
 
   def not_same_player

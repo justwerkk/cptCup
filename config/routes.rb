@@ -6,6 +6,7 @@ CptCup::Application.routes.draw do
       get :odds, :on => :collection
       get :shot_tracker, :on => :member
       post :create_shot, :on => :member
+      post :select_winner, :on => :member
     end
   end
 
