@@ -29,4 +29,8 @@ module ApplicationHelper
   def hit_or_miss(shot)
     shot.is_hit ? "hit" : "miss"
   end
+
+  def check_hit(game, team, cup_position)
+    game.cup_is_hit?(team, cup_position) ? " hit" : ""
+  end
 end

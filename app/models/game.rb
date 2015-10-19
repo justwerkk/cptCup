@@ -86,11 +86,11 @@ class Game < ActiveRecord::Base
   end
 
   def team_1_hit_cups
-    self.shots.where(player_id: [player_one_id, player_two_id]).map(&:cup_position)
+    @team_1_hit_cups ||= self.shots.where(player_id: [player_one_id, player_two_id], is_hit: true).map(&:cup_position)
   end
 
   def team_2_hit_cups
-    self.shots.where(player_id: [player_three_id, player_four_id]).map(&:cup_position)
+    @team_2_hit_cups ||= self.shots.where(player_id: [player_three_id, player_four_id], is_hit: true).map(&:cup_position)
   end
 
   def build_default_assocations
@@ -98,6 +98,11 @@ class Game < ActiveRecord::Base
     self.build_player_two unless self.player_two
     self.build_player_three unless self.player_three
     self.build_player_four unless self.player_four
+  end
+
+  def cup_is_hit?(team, cup_position)
+    hit_cups = team == 1 ? team_1_hit_cups : team_2_hit_cups
+    hit_cups.include?(cup_position)
   end
 
   private
