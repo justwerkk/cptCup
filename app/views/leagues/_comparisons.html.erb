@@ -1,3 +1,8 @@
+Player Rankings: <%= @player_rankings %>
+<br /><br />
+Game Hash: <%= @game_hash %>
+<br /><br />
+
 <% content_for :head do %>
 <style>
   body {
@@ -32,21 +37,32 @@
       <option value="winLoss">Win/Loss Ratio</option>
       <option value="domination">Domination</option>
       <option value="pwned">Pwned</option>
+      <option value="shots">Shot Percentage</option>
     </select>
   </label>
 </div>
+
 <svg id="svg-container"></svg>
 
 <% content_for :script do %>
-<script src="http://d3js.org/d3.v2.min.js"></script>
+<%= javascript_include_tag('d3/d3.js') %>
 <script>
-  var VsPlayer = function(id, wins, losses) {
+  var VsPlayer = function(id, wins, losses, shotsHit, shotsMissed) {
     this.id = id;
     this.wins = wins;
     this.losses = losses;
     this.totalGames = this.wins + this.losses
     this.plusMinus = this.wins - this.losses;
     this.winRatio = this.wins / this.totalGames;
+
+    this.shotsHit = shotsHit;
+    this.shotsMissed = shotsMissed;
+    this.totalShots = this.shotsHit + this.shotsMissed;
+    if (this.totalShots == 0) {
+      this.shotPercentage = 0;
+    } else {
+      this.shotPercentage = this.shotsHit / this.totalShots;
+    }
   }
   var Player = function(id, records) {
     this.id = id;
@@ -54,6 +70,8 @@
     this.versusArray = [];
     this.wins = 0;
     this.losses = 0;
+    this.shotsHit = 0;
+    this.shotsMissed = 0;
     this.score = 1200;
     var self = this;
     this.numGames = function() {
@@ -67,10 +85,12 @@
     }
     var initializeVersus = function() {
       $.each(self.records, function(i, idWinLossArr) {
-        var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1]);
+        var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1], idWinLossArr[1][2], idWinLossArr[1][3]);
         addVersus(vs);
         self.wins += vs.wins;
         self.losses += vs.losses;
+        self.shotsHit += vs.shotsHit;
+        self.shotsMissed += vs.shotsMissed;
       });
     }
     initializeVersus();
@@ -80,6 +100,15 @@
     this.totalGames = this.wins + this.losses;
     this.plusMinus = this.wins - this.losses;
     this.winRatio = this.wins / this.totalGames;
+
+    this.shotsHit /= 2;
+    this.shotsMissed /= 2;
+    this.totalShots = this.shotsHit + this.shotsMissed;
+    if (this.totalShots == 0) {
+      this.shotPercentage = 0;
+    } else {
+      this.shotPercentage = this.shotsHit / this.totalShots;
+    }
   }
   var chart = {
     w: 500,
@@ -181,6 +210,8 @@
         } else {
           return d3.descending(p2.winRatio, p1.winRatio);
         }
+        case "shots":
+          return d3.descending(p1.shotPercentage, p2.shotPercentage);
       }
     });
 
@@ -273,6 +304,8 @@
             return d.wins;
           case "losses":
             return d.losses;
+          case "shots":
+            return d.shotPercentage.toFixed(3);
         }
       });
     label.exit().remove();
@@ -311,6 +344,8 @@
         return player.losses / 10;
       case "winLoss":
         return (player.winRatio * 10) + 1;
+      case "shots":
+        return (player.shotPercentage * 10) + 1;
       case "domination":
       case "pwned":
     }   return 5;
