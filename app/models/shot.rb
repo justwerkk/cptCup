@@ -2,7 +2,10 @@ class Shot < ActiveRecord::Base
   attr_accessible :cup_position, :game_id, :is_hit, :player_id
   belongs_to :game
   belongs_to :player
+
   validate :unique_cups
+  validates_presence_of :player_id, :game
+  validates_inclusion_of :is_hit, :in => [true, false]
 
   def player_name
     player.name
