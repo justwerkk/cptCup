@@ -402,6 +402,8 @@
    }
 
    function create_shot(cup_position){
+     var rack_num = $('select.rerack-selector[data-team=' + team + ']').val();
+
      $.ajax({
        url: "<%= create_shot_league_game_path(@league, @game) %>",
        type: "POST",
@@ -409,7 +411,9 @@
 	 shot: {
 	   player_id: player,
 	   is_hit: is_hit,
-	   cup_position: cup_position }}, //"shot[player_id]": player, "shot[is_hit]": is_hit, "shot[cup_position]": cup_position },
+	   cup_position: cup_position,
+	   rack_num: rack_num
+	 }},
        success: function(response) {
 	 add_shot(response);
        }
