@@ -22,22 +22,26 @@ Team 2 has a total score of <%= @game.total_loser_score %>, and a <%= number_to_
   <% end %>
 
   <div class="field">
-    <%= f.label :winner_one, "Team 1 Player 1" %><br />
-    <%= f.select :winner_one_id, player_names %>
+    <%= f.label :player_one, "Team 1 Player 1" %><br />
+    <%= f.select :player_one_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :winner_two, "Team 1 Player 2" %><br />
-    <%= f.select :winner_two_id, player_names %>
+    <%= f.label :player_two, "Team 1 Player 2" %><br />
+    <%= f.select :player_two_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_one, "Team 2 Player 1" %><br />
-    <%= f.select :loser_one_id, player_names %>
+    <%= f.label :player_three, "Team 2 Player 1" %><br />
+    <%= f.select :player_three_id, player_names %>
   </div>
   <div class="field">
-    <%= f.label :loser_two, "Team 2 Player 2" %><br />
-    <%= f.select :loser_two_id, player_names %>
+    <%= f.label :player_four, "Team 2 Player 2" %><br />
+    <%= f.select :player_four_id, player_names %>
   </div>
   <div class="actions">
     <%= f.submit "Calculate Odds" %>
   </div>
 <% end %>
+
+
+
+<%= link_to "Back to league page", league_path(@game.league_id), :id => 'back-to-league' %>
