@@ -1,25 +1,28 @@
 <p id="notice"><%= notice %></p>
 
+<h2>Team 1</h2>
 <p>
-  <b>Winner one:</b>
-  <%= @game.winner_one.name %>
+  <b>Player one:</b>
+  <%= @game.player_one.name %>
 </p>
 
 <p>
-  <b>Winner two:</b>
-  <%= @game.winner_two.name %>
+  <b>Player two:</b>
+  <%= @game.player_two.name %>
+</p>
+
+<h2>Team 2</h2>
+<p>
+  <b>Player one:</b>
+  <%= @game.player_three.name %>
 </p>
 
 <p>
-  <b>Loser one:</b>
-  <%= @game.loser_one.name %>
+  <b>Player two:</b>
+  <%= @game.player_four.name %>
 </p>
 
-<p>
-  <b>Loser two:</b>
-  <%= @game.loser_two.name %>
-</p>
-
+<h2>Winning Team <%= @game.is_team_one_victory ? "TEAM 1" : "TEAM 2" %></h2>
 <p>
   <b>Cups left:</b>
   <%= @game.cups_left %>
