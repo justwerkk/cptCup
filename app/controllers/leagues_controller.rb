@@ -45,10 +45,10 @@ class LeaguesController < ApplicationController
         loser_two_id = g.player_two.id
       end
 
-      game_hash[winner_one_id].add_wins_against(loser_one_id, loser_two_id)
-      game_hash[winner_two_id].add_wins_against(loser_one_id, loser_two_id)
-      game_hash[loser_one_id].add_loses_against(winner_one_id, winner_two_id)
-      game_hash[loser_two_id].add_loses_against(winner_one_id, winner_two_id)
+      game_hash[winner_one_id].add_wins_against(loser_one_id, loser_two_id, g.cups_left)
+      game_hash[winner_two_id].add_wins_against(loser_one_id, loser_two_id, g.cups_left)
+      game_hash[loser_one_id].add_loses_against(winner_one_id, winner_two_id, g.cups_left)
+      game_hash[loser_two_id].add_loses_against(winner_one_id, winner_two_id, g.cups_left)
 
       # SHOTS HITS / MISSES
       g.shots.each do |shot|

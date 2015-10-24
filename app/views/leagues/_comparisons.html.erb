@@ -32,6 +32,8 @@
       <option value="winLoss">Win/Loss Ratio</option>
       <option value="domination">Domination</option>
       <option value="pwned">Pwned</option>
+      <option value="cups-left">Margin Of Victory (Total Cups)</option>
+      <option value="cups-left-average">Margin Of Victory (Average Cups/Game)</option>
       <option value="shots">Shot Percentage</option>
       <option value="three-rack-shots">Clutchness (Shot Percentage On 3-Racks)</option>
     </select>
@@ -43,13 +45,16 @@
 <% content_for :script do %>
 <%= javascript_include_tag('d3/d3.js') %>
 <script>
-  var VsPlayer = function(id, wins, losses, shotsHit, shotsMissed, threeRackShotsHit, threeRackShotsMissed) {
+  var VsPlayer = function(id, wins, losses, shotsHit, shotsMissed, threeRackShotsHit, threeRackShotsMissed, cupsLeft) {
     this.id = id;
     this.wins = wins;
     this.losses = losses;
     this.totalGames = this.wins + this.losses
     this.plusMinus = this.wins - this.losses;
     this.winRatio = this.wins / this.totalGames;
+
+    this.cupsLeft = cupsLeft;
+    this.cupsLeftRatio = this.cupsLeft / this.totalGames;
 
     this.shotsHit = shotsHit;
     this.shotsMissed = shotsMissed;
@@ -75,6 +80,7 @@
     this.versusArray = [];
     this.wins = 0;
     this.losses = 0;
+    this.cupsLeft = 0;
     this.shotsHit = 0;
     this.shotsMissed = 0;
     this.threeRackShotsHit = 0;
@@ -92,10 +98,11 @@
     }
     var initializeVersus = function() {
       $.each(self.records, function(i, idWinLossArr) {
-        var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1], idWinLossArr[1][2], idWinLossArr[1][3], idWinLossArr[1][4], idWinLossArr[1][5]);
+        var vs = new VsPlayer(idWinLossArr[0], idWinLossArr[1][0], idWinLossArr[1][1], idWinLossArr[1][2], idWinLossArr[1][3], idWinLossArr[1][4], idWinLossArr[1][5], idWinLossArr[1][6]);
         addVersus(vs);
         self.wins += vs.wins;
         self.losses += vs.losses;
+        self.cupsLeft += vs.cupsLeft;
         self.shotsHit += vs.shotsHit;
         self.shotsMissed += vs.shotsMissed;
         self.threeRackShotsHit += vs.threeRackShotsHit;
@@ -109,6 +116,9 @@
     this.totalGames = this.wins + this.losses;
     this.plusMinus = this.wins - this.losses;
     this.winRatio = this.wins / this.totalGames;
+
+    this.cupsLeft /= 2;
+    this.cupsLeftRatio = this.cupsLeft / this.totalGames;
 
     this.shotsHit /= 2;
     this.shotsMissed /= 2;
@@ -210,6 +220,10 @@
           return d3.descending(p1.wins, p2.wins);
         case "losses":
           return d3.descending(p1.losses, p2.losses);
+        case "cups-left":
+          return d3.descending(p1.cupsLeft, p2.cupsLeft);
+        case "cups-left-average":
+          return d3.descending(p1.cupsLeftRatio, p2.cupsLeftRatio);
         case "winLoss":
         case "domination":
           if (p1.winRatio == p2.winRatio) {
@@ -267,6 +281,18 @@
             } else {
               return "rgb(" + (Math.abs(d.plusMinus) * 50) + ", 0, 0)";
             }
+          case "cups-left":
+            if (d.cupsLeft > 0) {
+              return "rgb(0, " + (Math.abs(d.cupsLeft) * 5) + ", 0)";
+            } else {
+              return "rgb(" + (Math.abs(d.cupsLeft) * 5) + ", 0, 0)";
+            }
+          case "cups-left-average":
+            if (d.cupsLeftRatio > 0) {
+              return "rgb(0, " + (Math.abs(d.cupsLeftRatio) * 50) + ", 0)";
+            } else {
+              return "rgb(" + (Math.abs(d.cupsLeftRatio) * 50) + ", 0, 0)";
+            }
           case "ranking":
           case "winLoss":
           case "games":
@@ -317,6 +343,10 @@
             return d.score.toFixed(2);
           case "plusminus":
             return (d.plusMinus > 0 ? "+" : "") + d.plusMinus;
+          case "cups-left":
+            return (d.cupsLeft > 0 ? "+" : "") + d.cupsLeft;
+          case "cups-left-average":
+            return (d.cupsLeftRatio > 0 ? "+" : "") + d.cupsLeftRatio;
           case "games":
             return d.totalGames;
           case "winLoss":
@@ -361,6 +391,10 @@
         return 0;
       case "plusminus":
         return Math.max(player.plusMinus, 0) + 1;
+      case "cups-left":
+        return Math.max(player.cupsLeft, 0) + 1;
+      case "cups-left-average":
+        return Math.max(player.cupsLeftRatio, 0) + 1;
       case "games":
         return player.totalGames / 10;
       case "wins":
