@@ -22,8 +22,8 @@ class PlayerComparison
     @against_hash[winner_one_id][LOSSES_INDEX] += 1
     @against_hash[winner_two_id][LOSSES_INDEX] += 1
 
-    @against_hash[winner_one_id][CUPS_LEFT] -= cups_left
-    @against_hash[winner_two_id][CUPS_LEFT] -= cups_left
+    @against_hash[winner_one_id][CUPS_LEFT] -= cups_left if cups_left
+    @against_hash[winner_two_id][CUPS_LEFT] -= cups_left if cups_left
   end
 
   def add_wins_against(loser_one_id, loser_two_id, cups_left)
@@ -33,8 +33,8 @@ class PlayerComparison
     @against_hash[loser_one_id][WINS_INDEX] += 1
     @against_hash[loser_two_id][WINS_INDEX] += 1
 
-    @against_hash[loser_one_id][CUPS_LEFT] += cups_left
-    @against_hash[loser_two_id][CUPS_LEFT] += cups_left
+    @against_hash[loser_one_id][CUPS_LEFT] += cups_left if cups_left
+    @against_hash[loser_two_id][CUPS_LEFT] += cups_left if cups_left
   end
 
   def add_shot(shot, opponent_1_id, opponent_2_id)
