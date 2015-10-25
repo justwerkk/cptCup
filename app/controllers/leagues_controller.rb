@@ -31,6 +31,8 @@ class LeaguesController < ApplicationController
 
     @league.games.each do |g|
       next if g.is_team_one_victory.nil?
+
+      # WINS / LOSSES
       if g.is_team_one_victory
         winner_one_id = g.player_one.id
         winner_two_id = g.player_two.id
@@ -43,11 +45,25 @@ class LeaguesController < ApplicationController
         loser_two_id = g.player_two.id
       end
 
-      game_hash[winner_one_id].add_wins_against(loser_one_id, loser_two_id)
-      game_hash[winner_two_id].add_wins_against(loser_one_id, loser_two_id)
-      game_hash[loser_one_id].add_loses_against(winner_one_id, winner_two_id)
-      game_hash[loser_two_id].add_loses_against(winner_one_id, winner_two_id)
+      game_hash[winner_one_id].add_wins_against(loser_one_id, loser_two_id, g.cups_left)
+      game_hash[winner_two_id].add_wins_against(loser_one_id, loser_two_id, g.cups_left)
+      game_hash[loser_one_id].add_loses_against(winner_one_id, winner_two_id, g.cups_left)
+      game_hash[loser_two_id].add_loses_against(winner_one_id, winner_two_id, g.cups_left)
+
+      # SHOTS HITS / MISSES
+      g.shots.each do |shot|
+        shooter_id = shot.player_id
+
+        if [g.player_one.id, g.player_two.id].include?(shooter_id)
+          opponent_1_id, opponent_2_id = g.player_three.id, g.player_four.id
+        elsif [g.player_three.id, g.player_four.id].include?(shooter_id)
+          opponent_1_id, opponent_2_id = g.player_one.id, g.player_two.id
+        end
+
+        game_hash[shooter_id].add_shot(shot, opponent_1_id, opponent_2_id)
+      end
     end
+
     @game_hash = {}
     game_hash.to_a.each {|arr| @game_hash[arr.first] = arr.last.against_hash.to_a}
 
