@@ -22,8 +22,8 @@ Program that collects BP stats
 - `bundle exec rake db:create` to create the dev db
 - `bundle exec rake db:migrate` to migrate the db
 - `bundle exec rake assets:precompile` to compile the assets. There should be a way where you dont have to do this in development, but not sure...
-- `rails s` to start the rails server on port 3000
-- `rails c` to start the rails console
+- `bundle exec rails s` to start the rails server on port 3000
+- `bundle exec rails c` to start the rails console
 
 ### To run the test suite
 - `bundle exec rake db:test:prepare`
