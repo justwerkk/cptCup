@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+    cptcup-ruby:
+        image: cpt/cptcup-dev
+        container_name: cptcup-ruby-container
+        hostname: cptcup-ruby
+        volumes:
+            - bundle-data:/home/app/bundle
+            - ../cptCupNew:/home/cptcup
+        command:
+            - bash
+            - -c
+            - |
+                touch /home/cptcup/log/development.log
+                tail -F /home/cptcup/log/development.log
+        ports:
+            - 3000:3000
+        environment:
+            - DOCKER_DATABASE_HOST=cptcup-postgres
+            - DOCKER_DATABASE_USERNAME=postgres
+            - DOCKER_DATABASE_PASSWORD=password
+            - BUNDLE_PATH=/home/app/bundle
+        depends_on:
+            - cptcup-postgres
+    cptcup-postgres:
+        image: postgres:11.18-bullseye
+        container_name: cptcup-postgres-container
+        hostname: cptcup-postgres
+        ports:
+            - 5432:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data:delegated
+        environment:
+            - POSTGRES_PASSWORD=password
+
+volumes:
+    bundle-data:
+    pgdata:
